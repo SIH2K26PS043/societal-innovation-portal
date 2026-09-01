@@ -1,3 +1,11 @@
+import { config } from "dotenv";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+
+// Load the single root .env so the whole monorepo shares one env file.
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+config({ path: path.resolve(__dirname, "../../.env") });
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,

@@ -21,10 +21,13 @@ members. Do NOT build feature screens — you own the shared plumbing.
 plus auth, the app shell, seed data, and deployment — the things every other module depends on.
 
 **Do these in order, each fully before the next:**
-1. **Database + env.** Create a Supabase project. Fill `.env` from `.env.example` (`DATABASE_URL`,
-   `DIRECT_URL`, `NEXTAUTH_SECRET`, `AI_SERVICE_URL/KEY`, Supabase storage). Run `pnpm db:generate`,
-   `pnpm db:migrate`, then apply `packages/db/prisma/migrations/manual_vectors.sql` to add pgvector
-   columns. Run `pnpm db:seed`. Confirm rows exist.
+1. **Database + env.** There is ONE `.env` at the repo root (Next, Prisma, and the AI service all read
+   it). Fill it from `.env.example` with the Supabase `DATABASE_URL` + `DIRECT_URL` (from Supabase →
+   Connect → ORMs → Prisma) and `NEXTAUTH_SECRET`. Then: `pnpm db:generate`, `pnpm db:push` (creates all
+   tables), then add the pgvector columns by running `packages/db/prisma/migrations/manual_vectors.sql`
+   in Supabase → SQL Editor. Run `pnpm db:seed`. Confirm rows exist. (If your network can't run
+   `db:push`, paste `packages/db/prisma/full-setup.sql` into Supabase → SQL Editor instead, then seed.)
+   Also create a Supabase Storage bucket named `evidence` for media uploads.
 2. **Auth + RBAC.** Verify login works for all 5 demo roles (`citizen@demo.in`, `uniadmin@…`,
    `industry@demo.in`, `gov@demo.in`, `admin@demo.in`, password `password`) and each lands on its
    home via `HOME_FOR_ROLE`. Confirm `middleware.ts` blocks cross-role access.

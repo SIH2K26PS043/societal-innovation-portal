@@ -46,15 +46,18 @@ All 6 members build against **shared contracts** so nobody's AI drifts:
 **Data/infra:** Postgres + pgvector (Supabase) · Supabase Storage · Vercel · Render — **all free tier**
 
 ## 🚀 Local dev (scaffold is in place — verified: installs, typechecks, builds)
+There is **one `.env` at the repo root** — Next, Prisma, and the AI service all read it.
 ```bash
 pnpm install
-cp .env.example .env                 # fill in DATABASE_URL, NEXTAUTH_SECRET, etc.
+cp .env.example .env                 # fill in DATABASE_URL + DIRECT_URL (Supabase), NEXTAUTH_SECRET
 pnpm db:generate                     # prisma client
-pnpm db:migrate                      # create tables
-psql "$DIRECT_URL" -f packages/db/prisma/migrations/manual_vectors.sql   # pgvector columns
-pnpm db:seed                         # Jharkhand universities/faculty + citizen problems (incl. dupes)
+pnpm db:push                         # create all tables (uses DIRECT_URL)
+# then add pgvector columns: run packages/db/prisma/migrations/manual_vectors.sql in Supabase → SQL Editor
+pnpm db:seed                         # demo logins + Jharkhand data (incl. the 8 dup water reports)
 pnpm dev                             # apps/web on http://localhost:3000
 ```
+Network blocks Postgres? Paste [`packages/db/prisma/full-setup.sql`](packages/db/prisma/full-setup.sql)
+into Supabase → SQL Editor to create everything, then run `pnpm db:seed`.
 AI service (separate terminal — Python 3.11 recommended):
 ```bash
 cd apps/ai
