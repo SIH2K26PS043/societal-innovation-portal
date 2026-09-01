@@ -30,6 +30,10 @@ High-fidelity designs for every screen live in [`design/`](design/) — **one fo
 each with the screen HTML + a plain-English "build this with your AI" guide. Open the `.html` in any
 browser, or point your AI at it to build the matching React page with `@repo/ui`.
 
+## 🚀 Starting your module?
+Each member has a **paste-ready kickoff prompt** for their AI in [`prompts/`](prompts/) — open yours,
+paste the whole file as your AI's first message, and it knows exactly what to read, build, and follow.
+
 ## 🧭 The "one hood" (why our code will connect)
 All 6 members build against **shared contracts** so nobody's AI drifts:
 `packages/db/prisma/schema.prisma` (data) · `packages/types` (API/AI shapes) · `packages/ui` (components) · `CLAUDE.md` (rules).

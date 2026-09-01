@@ -100,7 +100,8 @@ A 10-minute standup each morning: what you finished, what you're blocked on.
 
 1. **Assign** a real person to M1–M6.
 2. **Everyone:** clone the repo, run `pnpm install`, read `README.md` + `CLAUDE.md` + your
-   module's doc.
+   module's doc — then open **your kickoff prompt** in [`prompts/`](../prompts/) and paste it as your
+   AI's first message.
 3. **M1 goes first (~half a day):** create a Supabase project, fill `.env`, run
    `pnpm db:migrate` + the `manual_vectors.sql` + `pnpm db:seed`, deploy, and confirm you can
    log in as each of the 5 roles.
