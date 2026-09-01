@@ -146,6 +146,7 @@ The reason things break at the end is **drift**: two people's AIs invent two dif
 
 | Doc | What it locks down | Read before you touch |
 |-----|--------------------|-----------------------|
+| [START-HERE](START-HERE.md) | Plain-words summary: task division, rules, how to proceed | anything (read this first) |
 | [00-MASTER-PLAN](00-MASTER-PLAN.md) | Scope, priorities, timeline | anything |
 | [01-ARCHITECTURE-AND-STACK](01-ARCHITECTURE-AND-STACK.md) | System diagram, locked stack, repo layout | writing any code |
 | [02-DATA-MODEL](02-DATA-MODEL.md) | Entities, ER diagram, enums | any DB work |

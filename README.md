@@ -13,6 +13,7 @@ Government of Jharkhand, Department of Higher & Technical Education.
 ---
 
 ## 📚 Start here (read in order)
+0. [`docs/START-HERE.md`](docs/START-HERE.md) — **plain-words summary: task division, rules, how to proceed**
 1. [`docs/00-MASTER-PLAN.md`](docs/00-MASTER-PLAN.md) — scope, MoSCoW feature list, 7-day plan
 2. [`docs/01-ARCHITECTURE-AND-STACK.md`](docs/01-ARCHITECTURE-AND-STACK.md) — system design + locked stack + repo layout
 3. [`docs/02-DATA-MODEL.md`](docs/02-DATA-MODEL.md) — schema, ER diagram, enums
