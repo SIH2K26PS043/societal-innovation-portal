@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Government · Impact dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+  <style>
+    :root{
+      --primary:hsl(213 85% 30%); --secondary:hsl(152 55% 30%); --accent:hsl(24 88% 45%);
+      --bg:hsl(210 20% 97%); --card:#fff; --fg:hsl(215 28% 14%);
+      --muted:hsl(210 16% 93%); --muted-fg:hsl(215 15% 42%); --border:hsl(214 22% 88%);
+      --sidebar:hsl(214 44% 12%);
+    }
+    *{box-sizing:border-box;}
+    body{margin:0;font-family:Inter,system-ui,sans-serif;color:var(--fg);}
+  </style>
+</head>
+<body>
+<div style="width:1440px;min-height:1180px;background:var(--bg);font-family:Inter,system-ui,sans-serif;display:flex;">
+
+  <!-- sidebar -->
+  <div style="width:236px;flex:none;background:var(--sidebar);color:#fff;padding:22px 16px;display:flex;flex-direction:column;gap:6px;">
+    <div style="display:flex;align-items:center;gap:10px;padding:6px 8px 20px;">
+      <div style="width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,var(--primary),var(--secondary));"></div>
+      <span style="font-weight:700;font-size:15px;">Innovation Portal</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:9px;background:rgba(255,255,255,.12);font-size:14px;font-weight:600;">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>
+      Dashboard
+    </div>
+    <div style="display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:9px;color:hsl(213 25% 74%);font-size:14px;font-weight:500;">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 3L3 6v15l6-3 6 3 6-3V3l-6 3-6-3z"/><path d="M9 3v15M15 6v15"/></svg>
+      District map
+    </div>
+    <div style="display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:9px;color:hsl(213 25% 74%);font-size:14px;font-weight:500;">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>
+      NEP impact
+    </div>
+    <div style="display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:9px;color:hsl(213 25% 74%);font-size:14px;font-weight:500;">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3 8-8"/><path d="M20 12v7a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h9"/></svg>
+      Review proposals
+    </div>
+    <div style="margin-top:auto;display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:9px;background:rgba(255,255,255,.06);">
+      <div style="width:32px;height:32px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;">DH</div>
+      <div><div style="font-size:13px;font-weight:600;">Dept. of Higher Ed</div><div style="font-size:11px;color:hsl(213 25% 68%);">Government</div></div>
+    </div>
+  </div>
+
+  <!-- main -->
+  <div style="flex:1;min-width:0;">
+    <!-- topbar -->
+    <div style="height:66px;display:flex;align-items:center;gap:16px;padding:0 32px;background:#fff;border-bottom:1px solid var(--border);">
+      <div>
+        <div style="font-size:18px;font-weight:700;letter-spacing:-.01em;">Impact dashboard</div>
+      </div>
+      <div style="margin-left:auto;display:flex;align-items:center;gap:10px;">
+        <div style="display:flex;align-items:center;gap:8px;height:38px;padding:0 12px;border:1px solid var(--border);border-radius:9px;font-size:13px;font-weight:600;color:var(--muted-fg);">All districts
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;height:38px;padding:0 12px;border:1px solid var(--border);border-radius:9px;font-size:13px;font-weight:600;color:var(--muted-fg);">Last 30 days</div>
+      </div>
+    </div>
+
+    <div style="padding:26px 32px 40px;display:flex;flex-direction:column;gap:22px;">
+
+      <!-- KPI row -->
+      <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px;">
+        <div style="background:#fff;border:1px solid var(--border);border-radius:14px;padding:20px;">
+          <div style="font-size:13px;color:var(--muted-fg);font-weight:500;">Problems reported</div>
+          <div style="display:flex;align-items:baseline;gap:8px;margin-top:8px;"><span style="font-size:34px;font-weight:800;letter-spacing:-.02em;">1,284</span><span style="font-size:13px;font-weight:600;color:var(--secondary);">+12%</span></div>
+        </div>
+        <div style="background:#fff;border:1px solid var(--border);border-radius:14px;padding:20px;">
+          <div style="font-size:13px;color:var(--muted-fg);font-weight:500;">Resolved</div>
+          <div style="display:flex;align-items:baseline;gap:8px;margin-top:8px;"><span style="font-size:34px;font-weight:800;letter-spacing:-.02em;">342</span><span style="font-size:13px;font-weight:600;color:var(--secondary);">27%</span></div>
+        </div>
+        <div style="background:#fff;border:1px solid var(--border);border-radius:14px;padding:20px;">
+          <div style="font-size:13px;color:var(--muted-fg);font-weight:500;">Universities engaged</div>
+          <div style="display:flex;align-items:baseline;gap:8px;margin-top:8px;"><span style="font-size:34px;font-weight:800;letter-spacing:-.02em;">5</span></div>
+        </div>
+        <div style="background:#fff;border:1px solid var(--border);border-radius:14px;padding:20px;">
+          <div style="font-size:13px;color:var(--muted-fg);font-weight:500;">Active projects</div>
+          <div style="display:flex;align-items:baseline;gap:8px;margin-top:8px;"><span style="font-size:34px;font-weight:800;letter-spacing:-.02em;">47</span></div>
+        </div>
+      </div>
+
+      <!-- charts row -->
+      <div style="display:grid;grid-template-columns:1.35fr 1fr;gap:18px;">
+        <!-- category chart -->
+        <div style="background:#fff;border:1px solid var(--border);border-radius:14px;padding:22px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
+            <div style="font-size:15px;font-weight:700;">Problems by category</div>
+            <span style="font-size:12px;color:var(--muted-fg);">this month</span>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:14px;">
+            <div style="display:flex;align-items:center;gap:12px;"><span style="width:88px;font-size:13px;color:var(--muted-fg);">Water</span><div style="flex:1;height:12px;border-radius:6px;background:var(--muted);overflow:hidden;"><div style="width:82%;height:100%;background:#2b8ccc;border-radius:6px;"></div></div><span style="width:38px;text-align:right;font-size:13px;font-weight:700;font-variant-numeric:tabular-nums;">318</span></div>
+            <div style="display:flex;align-items:center;gap:12px;"><span style="width:88px;font-size:13px;color:var(--muted-fg);">Sanitation</span><div style="flex:1;height:12px;border-radius:6px;background:var(--muted);overflow:hidden;"><div style="width:64%;height:100%;background:#6d9dc5;border-radius:6px;"></div></div><span style="width:38px;text-align:right;font-size:13px;font-weight:700;font-variant-numeric:tabular-nums;">247</span></div>
+            <div style="display:flex;align-items:center;gap:12px;"><span style="width:88px;font-size:13px;color:var(--muted-fg);">Agriculture</span><div style="flex:1;height:12px;border-radius:6px;background:var(--muted);overflow:hidden;"><div style="width:55%;height:100%;background:#5aa02c;border-radius:6px;"></div></div><span style="width:38px;text-align:right;font-size:13px;font-weight:700;font-variant-numeric:tabular-nums;">213</span></div>
+            <div style="display:flex;align-items:center;gap:12px;"><span style="width:88px;font-size:13px;color:var(--muted-fg);">Health</span><div style="flex:1;height:12px;border-radius:6px;background:var(--muted);overflow:hidden;"><div style="width:44%;height:100%;background:#e0524e;border-radius:6px;"></div></div><span style="width:38px;text-align:right;font-size:13px;font-weight:700;font-variant-numeric:tabular-nums;">169</span></div>
+            <div style="display:flex;align-items:center;gap:12px;"><span style="width:88px;font-size:13px;color:var(--muted-fg);">Energy</span><div style="flex:1;height:12px;border-radius:6px;background:var(--muted);overflow:hidden;"><div style="width:33%;height:100%;background:#f5a623;border-radius:6px;"></div></div><span style="width:38px;text-align:right;font-size:13px;font-weight:700;font-variant-numeric:tabular-nums;">128</span></div>
+            <div style="display:flex;align-items:center;gap:12px;"><span style="width:88px;font-size:13px;color:var(--muted-fg);">Urban</span><div style="flex:1;height:12px;border-radius:6px;background:var(--muted);overflow:hidden;"><div style="width:26%;height:100%;background:#7b61ff;border-radius:6px;"></div></div><span style="width:38px;text-align:right;font-size:13px;font-weight:700;font-variant-numeric:tabular-nums;">101</span></div>
+          </div>
+        </div>
+
+        <!-- NEP impact -->
+        <div style="background:hsl(214 44% 12%);color:#fff;border-radius:14px;padding:22px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+            <div style="font-size:15px;font-weight:700;">NEP 2020 impact</div>
+            <span style="font-size:11px;font-weight:600;color:hsl(24 88% 62%);background:hsl(24 88% 45% / .16);border-radius:999px;padding:3px 9px;">SPONSOR VIEW</span>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+            <div style="background:rgba(255,255,255,.06);border-radius:11px;padding:14px;"><div style="font-size:28px;font-weight:800;">18</div><div style="font-size:12px;color:hsl(213 25% 74%);margin-top:2px;">Patents filed</div></div>
+            <div style="background:rgba(255,255,255,.06);border-radius:11px;padding:14px;"><div style="font-size:28px;font-weight:800;">7</div><div style="font-size:12px;color:hsl(213 25% 74%);margin-top:2px;">Startups created</div></div>
+            <div style="background:rgba(255,255,255,.06);border-radius:11px;padding:14px;"><div style="font-size:28px;font-weight:800;">1,940</div><div style="font-size:12px;color:hsl(213 25% 74%);margin-top:2px;">Students engaged</div></div>
+            <div style="background:rgba(255,255,255,.06);border-radius:11px;padding:14px;display:flex;align-items:center;gap:12px;">
+              <svg width="52" height="52" viewBox="0 0 42 42">
+                <circle cx="21" cy="21" r="16" fill="none" stroke="rgba(255,255,255,.14)" stroke-width="6"/>
+                <circle cx="21" cy="21" r="16" fill="none" stroke="hsl(152 55% 45%)" stroke-width="6" stroke-linecap="round" stroke-dasharray="100.5" stroke-dashoffset="33" transform="rotate(-90 21 21)"/>
+              </svg>
+              <div><div style="font-size:20px;font-weight:800;">67%</div><div style="font-size:11px;color:hsl(213 25% 74%);">completion</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- map + table row -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;">
+        <!-- district heat -->
+        <div style="background:#fff;border:1px solid var(--border);border-radius:14px;padding:22px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+            <div style="font-size:15px;font-weight:700;">Problems by district</div>
+            <div style="display:flex;align-items:center;gap:6px;font-size:11px;color:var(--muted-fg);">low
+              <span style="width:12px;height:12px;border-radius:3px;background:hsl(213 70% 88%);"></span>
+              <span style="width:12px;height:12px;border-radius:3px;background:hsl(213 75% 68%);"></span>
+              <span style="width:12px;height:12px;border-radius:3px;background:hsl(213 80% 48%);"></span>
+              <span style="width:12px;height:12px;border-radius:3px;background:hsl(213 85% 30%);"></span>high
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;">
+            <div style="height:56px;border-radius:9px;background:hsl(213 85% 30%);color:#fff;padding:9px;font-size:11px;font-weight:600;">Ranchi<div style="font-size:15px;font-weight:800;margin-top:auto;">214</div></div>
+            <div style="height:56px;border-radius:9px;background:hsl(213 80% 46%);color:#fff;padding:9px;font-size:11px;font-weight:600;">Dhanbad<div style="font-size:15px;font-weight:800;">168</div></div>
+            <div style="height:56px;border-radius:9px;background:hsl(213 78% 55%);color:#fff;padding:9px;font-size:11px;font-weight:600;">E. Singhbhum<div style="font-size:15px;font-weight:800;">141</div></div>
+            <div style="height:56px;border-radius:9px;background:hsl(213 75% 68%);color:hsl(214 40% 20%);padding:9px;font-size:11px;font-weight:600;">Bokaro<div style="font-size:15px;font-weight:800;">96</div></div>
+            <div style="height:56px;border-radius:9px;background:hsl(213 75% 66%);color:hsl(214 40% 20%);padding:9px;font-size:11px;font-weight:600;">Hazaribagh<div style="font-size:15px;font-weight:800;">88</div></div>
+            <div style="height:56px;border-radius:9px;background:hsl(213 72% 76%);color:hsl(214 40% 20%);padding:9px;font-size:11px;font-weight:600;">Giridih<div style="font-size:15px;font-weight:800;">71</div></div>
+            <div style="height:56px;border-radius:9px;background:hsl(213 70% 82%);color:hsl(214 40% 20%);padding:9px;font-size:11px;font-weight:600;">Gumla<div style="font-size:15px;font-weight:800;">54</div></div>
+            <div style="height:56px;border-radius:9px;background:hsl(213 70% 88%);color:hsl(214 40% 20%);padding:9px;font-size:11px;font-weight:600;">Deoghar<div style="font-size:15px;font-weight:800;">39</div></div>
+          </div>
+          <div style="font-size:12px;color:var(--muted-fg);margin-top:12px;">Full interactive Jharkhand heatmap on the Map page.</div>
+        </div>
+
+        <!-- recent activity -->
+        <div style="background:#fff;border:1px solid var(--border);border-radius:14px;padding:22px;">
+          <div style="font-size:15px;font-weight:700;margin-bottom:14px;">Recent activity</div>
+          <div style="display:flex;flex-direction:column;gap:2px;">
+            <div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);">
+              <span style="width:8px;height:8px;border-radius:50%;background:#2b8ccc;flex:none;"></span>
+              <span style="font-size:13px;flex:1;">Water cluster routed to <strong>BIT Mesra</strong></span>
+              <span style="font-size:12px;color:var(--muted-fg);">2m</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);">
+              <span style="width:8px;height:8px;border-radius:50%;background:var(--secondary);flex:none;"></span>
+              <span style="font-size:13px;flex:1;">Proposal approved · <strong>Solar micro-grid</strong></span>
+              <span style="font-size:12px;color:var(--muted-fg);">18m</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);">
+              <span style="width:8px;height:8px;border-radius:50%;background:var(--accent);flex:none;"></span>
+              <span style="font-size:13px;flex:1;">Patent filed · <strong>Low-cost water filter</strong></span>
+              <span style="font-size:12px;color:var(--muted-fg);">1h</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:12px;padding:10px 0;">
+              <span style="width:8px;height:8px;border-radius:50%;background:#7b61ff;flex:none;"></span>
+              <span style="font-size:13px;flex:1;">SolarWorks joined a project as partner</span>
+              <span style="font-size:12px;color:var(--muted-fg);">3h</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

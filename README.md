@@ -25,6 +25,11 @@ Government of Jharkhand, Department of Higher & Technical Education.
 9. [`docs/08-DEMO-SCRIPT.md`](docs/08-DEMO-SCRIPT.md) — crash-proof demo
 10. [`CLAUDE.md`](CLAUDE.md) — **AI coding rules — every AI tool reads this**
 
+## 🎨 Page designs
+High-fidelity designs for every screen live in [`design/`](design/) — **one folder per module owner**,
+each with the screen HTML + a plain-English "build this with your AI" guide. Open the `.html` in any
+browser, or point your AI at it to build the matching React page with `@repo/ui`.
+
 ## 🧭 The "one hood" (why our code will connect)
 All 6 members build against **shared contracts** so nobody's AI drifts:
 `packages/db/prisma/schema.prisma` (data) · `packages/types` (API/AI shapes) · `packages/ui` (components) · `CLAUDE.md` (rules).

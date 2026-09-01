@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Design system reference</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+  <style>
+    :root{
+      --primary:hsl(213 85% 30%); --primary-fg:#fff;
+      --secondary:hsl(152 55% 30%); --accent:hsl(24 88% 45%);
+      --bg:hsl(210 20% 98%); --card:#fff; --fg:hsl(215 28% 14%);
+      --muted:hsl(210 16% 93%); --muted-fg:hsl(215 15% 40%);
+      --border:hsl(214 22% 87%); --success:hsl(152 55% 35%);
+      --warning:hsl(38 90% 40%); --danger:hsl(0 72% 51%); --info:hsl(213 85% 42%);
+    }
+    *{box-sizing:border-box;}
+    body{margin:0;font-family:Inter,system-ui,sans-serif;color:var(--fg);}
+    a{color:var(--primary);} a:hover{color:hsl(213 85% 24%);}
+  </style>
+</head>
+<body>
+<div style="width:1240px;background:var(--bg);padding:48px 56px;font-family:Inter,system-ui,sans-serif;">
+
+  <!-- header -->
+  <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:24px;padding-bottom:24px;border-bottom:1px solid var(--border);">
+    <div>
+      <div style="font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);">Societal Innovation Portal · SIH26043</div>
+      <h1 style="margin:8px 0 0;font-size:34px;font-weight:800;letter-spacing:-.02em;">Design System</h1>
+      <p style="margin:6px 0 0;color:var(--muted-fg);font-size:15px;">The one visual language every module shares — lifted from <span style="font-family:ui-monospace,monospace;font-size:13px;">packages/ui</span>.</p>
+    </div>
+    <div style="display:flex;gap:8px;">
+      <span style="font-family:ui-monospace,monospace;font-size:12px;color:var(--muted-fg);border:1px solid var(--border);border-radius:6px;padding:5px 9px;background:var(--card);">Inter</span>
+      <span style="font-family:ui-monospace,monospace;font-size:12px;color:var(--muted-fg);border:1px solid var(--border);border-radius:6px;padding:5px 9px;background:var(--card);">radius 10px</span>
+    </div>
+  </div>
+
+  <!-- colors -->
+  <h2 style="margin:36px 0 16px;font-size:14px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted-fg);">Brand &amp; semantic</h2>
+  <div style="display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:14px;">
+    <div style="border:1px solid var(--border);border-radius:10px;overflow:hidden;background:var(--card);">
+      <div style="height:64px;background:var(--primary);"></div>
+      <div style="padding:10px 12px;"><div style="font-size:13px;font-weight:600;">Primary</div><div style="font-family:ui-monospace,monospace;font-size:11px;color:var(--muted-fg);">213 85% 30%</div></div>
+    </div>
+    <div style="border:1px solid var(--border);border-radius:10px;overflow:hidden;background:var(--card);">
+      <div style="height:64px;background:var(--secondary);"></div>
+      <div style="padding:10px 12px;"><div style="font-size:13px;font-weight:600;">Secondary</div><div style="font-family:ui-monospace,monospace;font-size:11px;color:var(--muted-fg);">152 55% 30%</div></div>
+    </div>
+    <div style="border:1px solid var(--border);border-radius:10px;overflow:hidden;background:var(--card);">
+      <div style="height:64px;background:var(--accent);"></div>
+      <div style="padding:10px 12px;"><div style="font-size:13px;font-weight:600;">Accent</div><div style="font-family:ui-monospace,monospace;font-size:11px;color:var(--muted-fg);">24 88% 45%</div></div>
+    </div>
+    <div style="border:1px solid var(--border);border-radius:10px;overflow:hidden;background:var(--card);">
+      <div style="height:64px;background:var(--success);"></div>
+      <div style="padding:10px 12px;"><div style="font-size:13px;font-weight:600;">Success</div><div style="font-family:ui-monospace,monospace;font-size:11px;color:var(--muted-fg);">resolved</div></div>
+    </div>
+    <div style="border:1px solid var(--border);border-radius:10px;overflow:hidden;background:var(--card);">
+      <div style="height:64px;background:var(--warning);"></div>
+      <div style="padding:10px 12px;"><div style="font-size:13px;font-weight:600;">Warning</div><div style="font-family:ui-monospace,monospace;font-size:11px;color:var(--muted-fg);">in progress</div></div>
+    </div>
+    <div style="border:1px solid var(--border);border-radius:10px;overflow:hidden;background:var(--card);">
+      <div style="height:64px;background:var(--danger);"></div>
+      <div style="padding:10px 12px;"><div style="font-size:13px;font-weight:600;">Danger</div><div style="font-family:ui-monospace,monospace;font-size:11px;color:var(--muted-fg);">critical</div></div>
+    </div>
+  </div>
+
+  <!-- category colors -->
+  <h2 style="margin:32px 0 16px;font-size:14px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted-fg);">Category palette</h2>
+  <div style="display:flex;flex-wrap:wrap;gap:10px;">
+    <span style="display:inline-flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--border);border-radius:999px;padding:6px 12px 6px 8px;font-size:13px;font-weight:500;"><span style="width:14px;height:14px;border-radius:50%;background:#2b8ccc;"></span>Water</span>
+    <span style="display:inline-flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--border);border-radius:999px;padding:6px 12px 6px 8px;font-size:13px;font-weight:500;"><span style="width:14px;height:14px;border-radius:50%;background:#e0524e;"></span>Health</span>
+    <span style="display:inline-flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--border);border-radius:999px;padding:6px 12px 6px 8px;font-size:13px;font-weight:500;"><span style="width:14px;height:14px;border-radius:50%;background:#5aa02c;"></span>Agriculture</span>
+    <span style="display:inline-flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--border);border-radius:999px;padding:6px 12px 6px 8px;font-size:13px;font-weight:500;"><span style="width:14px;height:14px;border-radius:50%;background:#f5a623;"></span>Energy</span>
+    <span style="display:inline-flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--border);border-radius:999px;padding:6px 12px 6px 8px;font-size:13px;font-weight:500;"><span style="width:14px;height:14px;border-radius:50%;background:#2e7d5b;"></span>Environment</span>
+    <span style="display:inline-flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--border);border-radius:999px;padding:6px 12px 6px 8px;font-size:13px;font-weight:500;"><span style="width:14px;height:14px;border-radius:50%;background:#6d9dc5;"></span>Sanitation</span>
+    <span style="display:inline-flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--border);border-radius:999px;padding:6px 12px 6px 8px;font-size:13px;font-weight:500;"><span style="width:14px;height:14px;border-radius:50%;background:#7b61ff;"></span>Urban</span>
+  </div>
+
+  <!-- type -->
+  <h2 style="margin:36px 0 16px;font-size:14px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted-fg);">Typography — Inter</h2>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:28px 32px;display:flex;flex-direction:column;gap:14px;">
+    <div style="display:flex;align-items:baseline;gap:20px;"><span style="width:90px;font-family:ui-monospace,monospace;font-size:12px;color:var(--muted-fg);">36 / 800</span><span style="font-size:36px;font-weight:800;letter-spacing:-.02em;">Turn problems into projects</span></div>
+    <div style="display:flex;align-items:baseline;gap:20px;"><span style="width:90px;font-family:ui-monospace,monospace;font-size:12px;color:var(--muted-fg);">24 / 700</span><span style="font-size:24px;font-weight:700;letter-spacing:-.01em;">Matched to the right professor</span></div>
+    <div style="display:flex;align-items:baseline;gap:20px;"><span style="width:90px;font-family:ui-monospace,monospace;font-size:12px;color:var(--muted-fg);">16 / 400</span><span style="font-size:16px;font-weight:400;color:var(--fg);">Body copy sits at 16px with a 1.55 line-height for comfortable reading.</span></div>
+    <div style="display:flex;align-items:baseline;gap:20px;"><span style="width:90px;font-family:ui-monospace,monospace;font-size:12px;color:var(--muted-fg);">13 / 500</span><span style="font-size:13px;font-weight:500;color:var(--muted-fg);">Supporting label and metadata</span></div>
+  </div>
+
+  <!-- components -->
+  <h2 style="margin:36px 0 16px;font-size:14px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted-fg);">Components</h2>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+
+    <!-- buttons + badges -->
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:24px;">
+      <div style="font-size:13px;font-weight:600;color:var(--muted-fg);margin-bottom:14px;">Buttons</div>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center;">
+        <button style="height:40px;padding:0 18px;border:0;border-radius:8px;background:var(--primary);color:#fff;font-family:inherit;font-size:14px;font-weight:600;cursor:pointer;">Primary</button>
+        <button style="height:40px;padding:0 18px;border:0;border-radius:8px;background:var(--accent);color:#fff;font-family:inherit;font-size:14px;font-weight:600;cursor:pointer;">Accent</button>
+        <button style="height:40px;padding:0 18px;border:1px solid var(--border);border-radius:8px;background:#fff;color:var(--fg);font-family:inherit;font-size:14px;font-weight:600;cursor:pointer;">Outline</button>
+        <button style="height:40px;padding:0 18px;border:0;border-radius:8px;background:transparent;color:var(--fg);font-family:inherit;font-size:14px;font-weight:600;cursor:pointer;">Ghost</button>
+      </div>
+      <div style="font-size:13px;font-weight:600;color:var(--muted-fg);margin:22px 0 12px;">Status badges</div>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;">
+        <span style="font-size:12px;font-weight:600;border:1px solid var(--border);border-radius:999px;padding:3px 10px;color:var(--muted-fg);">SUBMITTED</span>
+        <span style="font-size:12px;font-weight:600;border-radius:999px;padding:3px 10px;background:var(--primary);color:#fff;">ROUTED</span>
+        <span style="font-size:12px;font-weight:600;border-radius:999px;padding:3px 10px;background:var(--warning);color:#fff;">IN PROGRESS</span>
+        <span style="font-size:12px;font-weight:600;border-radius:999px;padding:3px 10px;background:var(--success);color:#fff;">RESOLVED</span>
+      </div>
+    </div>
+
+    <!-- form controls -->
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:24px;">
+      <div style="font-size:13px;font-weight:600;color:var(--muted-fg);margin-bottom:14px;">Form controls</div>
+      <label style="display:block;font-size:13px;font-weight:600;margin-bottom:6px;">Problem title</label>
+      <input value="No water supply — Ranchi ward 4" style="width:100%;height:42px;border:1px solid var(--border);border-radius:8px;padding:0 12px;font-family:inherit;font-size:14px;color:var(--fg);margin-bottom:16px;">
+      <label style="display:block;font-size:13px;font-weight:600;margin-bottom:6px;">Category</label>
+      <div style="display:flex;align-items:center;justify-content:space-between;height:42px;border:1px solid var(--border);border-radius:8px;padding:0 12px;font-size:14px;color:var(--fg);">
+        <span style="display:inline-flex;align-items:center;gap:8px;"><span style="width:12px;height:12px;border-radius:50%;background:#2b8ccc;"></span>Water</span>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--muted-fg);"><path d="M6 9l6 6 6-6"/></svg>
+      </div>
+    </div>
+  </div>
+
+  <!-- sample problem card -->
+  <h2 style="margin:32px 0 16px;font-size:14px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted-fg);">Problem card</h2>
+  <div style="max-width:560px;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;box-shadow:0 1px 2px rgba(20,40,70,.05);">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+      <span style="font-size:12px;font-weight:600;border-radius:999px;padding:3px 10px;background:#2b8ccc;color:#fff;">Water</span>
+      <span style="font-size:12px;font-weight:600;border-radius:999px;padding:3px 10px;background:var(--primary);color:#fff;">ROUTED</span>
+      <span style="margin-left:auto;display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:500;color:var(--muted-fg);">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="7" r="3"/><path d="M2 21v-2a5 5 0 0 1 5-5h4a5 5 0 0 1 5 5v2"/></svg>
+        reported by 8
+      </span>
+    </div>
+    <div style="font-size:17px;font-weight:700;letter-spacing:-.01em;">No water supply — Ranchi ward 4</div>
+    <div style="font-size:14px;color:var(--muted-fg);margin-top:4px;">Pipeline burst near the railway station; no supply for 3 days.</div>
+    <div style="display:flex;align-items:center;gap:16px;margin-top:16px;padding-top:14px;border-top:1px solid var(--border);font-size:13px;color:var(--muted-fg);">
+      <span style="display:inline-flex;align-items:center;gap:6px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7-6-7-11a7 7 0 0 1 14 0c0 5-7 11-7 11z"/><circle cx="12" cy="10" r="2"/></svg>Ranchi</span>
+      <span>Matched to <strong style="color:var(--fg);">Dr. A. Verma</strong>, BIT Mesra · <span style="color:var(--secondary);font-weight:600;">0.88</span></span>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Citizen · Submit a problem</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+  <style>
+    :root{
+      --primary:hsl(213 85% 30%); --secondary:hsl(152 55% 30%); --accent:hsl(24 88% 45%);
+      --bg:hsl(210 20% 98%); --card:#fff; --fg:hsl(215 28% 14%);
+      --muted:hsl(210 16% 93%); --muted-fg:hsl(215 15% 42%); --border:hsl(214 22% 87%);
+    }
+    *{box-sizing:border-box;}
+    body{margin:0;font-family:Inter,system-ui,sans-serif;color:var(--fg);}
+  </style>
+</head>
+<body>
+<div style="width:390px;min-height:900px;background:var(--bg);font-family:Inter,system-ui,sans-serif;display:flex;flex-direction:column;">
+
+  <!-- header -->
+  <div style="display:flex;align-items:center;gap:12px;padding:16px 18px;background:#fff;border-bottom:1px solid var(--border);">
+    <div style="width:38px;height:38px;border-radius:10px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;color:var(--fg);">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+    </div>
+    <div style="font-size:17px;font-weight:700;">Report a problem</div>
+    <div style="margin-left:auto;display:flex;background:var(--muted);border-radius:8px;padding:3px;font-size:12px;font-weight:600;">
+      <span style="padding:5px 9px;border-radius:6px;background:#fff;color:var(--fg);box-shadow:0 1px 1px rgba(0,0,0,.05);">EN</span>
+      <span style="padding:5px 9px;border-radius:6px;color:var(--muted-fg);">हिं</span>
+    </div>
+  </div>
+
+  <div style="padding:18px;display:flex;flex-direction:column;gap:18px;flex:1;">
+
+    <!-- title -->
+    <div>
+      <label style="display:block;font-size:13px;font-weight:600;margin-bottom:7px;">What is the problem?</label>
+      <input value="No water supply — Ranchi ward 4" style="width:100%;height:48px;border:1px solid var(--border);border-radius:10px;padding:0 14px;font-family:inherit;font-size:15px;color:var(--fg);background:#fff;">
+    </div>
+
+    <!-- description -->
+    <div>
+      <label style="display:block;font-size:13px;font-weight:600;margin-bottom:7px;">Describe it</label>
+      <div style="position:relative;">
+        <textarea style="width:100%;height:96px;border:1px solid var(--border);border-radius:10px;padding:12px 14px;font-family:inherit;font-size:15px;color:var(--fg);background:#fff;resize:none;line-height:1.5;">Pipeline burst near the railway station. No water for 3 days in our locality.</textarea>
+        <div style="position:absolute;right:10px;bottom:10px;width:36px;height:36px;border-radius:50%;background:var(--muted);display:flex;align-items:center;justify-content:center;color:var(--primary);">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>
+        </div>
+      </div>
+      <div style="font-size:12px;color:var(--muted-fg);margin-top:6px;display:flex;align-items:center;gap:6px;">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l8 4v5c0 5-4 8-8 9-4-1-8-4-8-9V7z"/></svg>
+        Tip: speak in Hindi — we translate it for you.
+      </div>
+    </div>
+
+    <!-- auto category -->
+    <div style="background:#fff;border:1px solid var(--border);border-radius:12px;padding:14px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;">
+        <span style="font-size:13px;font-weight:600;color:var(--muted-fg);">Detected category</span>
+        <span style="font-size:11px;font-weight:600;color:var(--secondary);background:hsl(152 55% 30% / .1);border-radius:999px;padding:2px 8px;">AI · 94%</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;margin-top:10px;">
+        <span style="display:inline-flex;align-items:center;gap:7px;font-size:14px;font-weight:600;color:#fff;background:#2b8ccc;border-radius:999px;padding:6px 12px;"><span style="width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,.85);"></span>Water</span>
+        <span style="font-size:13px;color:var(--muted-fg);">tap to change</span>
+      </div>
+    </div>
+
+    <!-- severity -->
+    <div>
+      <label style="display:block;font-size:13px;font-weight:600;margin-bottom:7px;">How urgent?</label>
+      <div style="display:flex;gap:8px;">
+        <div style="flex:1;height:44px;border:1px solid var(--border);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:600;color:var(--muted-fg);background:#fff;">Low</div>
+        <div style="flex:1;height:44px;border:1px solid var(--border);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:600;color:var(--muted-fg);background:#fff;">Medium</div>
+        <div style="flex:1;height:44px;border:2px solid var(--accent);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:var(--accent);background:hsl(24 88% 45% / .06);">High</div>
+      </div>
+    </div>
+
+    <!-- location -->
+    <div>
+      <label style="display:block;font-size:13px;font-weight:600;margin-bottom:7px;">Location</label>
+      <div style="border:1px solid var(--border);border-radius:12px;overflow:hidden;background:#fff;">
+        <div style="height:118px;position:relative;background:
+              linear-gradient(hsl(210 30% 90%),hsl(210 30% 88%));">
+          <div style="position:absolute;inset:0;background-image:
+            linear-gradient(hsl(210 25% 82% / .8) 1px,transparent 1px),
+            linear-gradient(90deg,hsl(210 25% 82% / .8) 1px,transparent 1px);
+            background-size:26px 26px;"></div>
+          <div style="position:absolute;left:34%;top:28%;width:70px;height:8px;background:hsl(152 40% 60% / .6);border-radius:6px;transform:rotate(20deg);"></div>
+          <div style="position:absolute;left:20%;bottom:22%;width:120px;height:8px;background:hsl(210 20% 70% / .7);border-radius:6px;transform:rotate(-8deg);"></div>
+          <div style="position:absolute;left:50%;top:50%;transform:translate(-50%,-100%);color:var(--accent);">
+            <svg width="30" height="30" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a7 7 0 0 0-7 7c0 5 7 13 7 13s7-8 7-13a7 7 0 0 0-7-7z"/><circle cx="12" cy="9" r="2.5" fill="#fff"/></svg>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;padding:12px 14px;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--secondary);"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>
+          <div style="flex:1;">
+            <div style="font-size:14px;font-weight:600;">Ward 4, near railway station</div>
+            <div style="font-size:12px;color:var(--muted-fg);">Ranchi · 23.344, 85.310</div>
+          </div>
+          <span style="font-size:12px;font-weight:600;color:var(--primary);">Adjust</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- evidence -->
+    <div>
+      <label style="display:block;font-size:13px;font-weight:600;margin-bottom:7px;">Add evidence</label>
+      <div style="display:flex;gap:10px;">
+        <div style="width:78px;height:78px;border-radius:10px;overflow:hidden;position:relative;background:hsl(210 20% 84%);">
+          <div style="position:absolute;inset:0;background:linear-gradient(135deg,hsl(205 30% 70%),hsl(205 25% 55%));"></div>
+          <div style="position:absolute;right:5px;top:5px;width:20px;height:20px;border-radius:50%;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;color:#fff;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg></div>
+        </div>
+        <div style="width:78px;height:78px;border-radius:10px;border:1.5px dashed var(--border);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;color:var(--muted-fg);background:#fff;">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="3.5"/></svg>
+          <span style="font-size:11px;font-weight:600;">Photo</span>
+        </div>
+        <div style="width:78px;height:78px;border-radius:10px;border:1.5px dashed var(--border);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;color:var(--muted-fg);background:#fff;">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="14" height="12" rx="2"/><path d="M22 8l-6 4 6 4z"/></svg>
+          <span style="font-size:11px;font-weight:600;">Video</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- submit -->
+  <div style="padding:16px 18px 22px;background:#fff;border-top:1px solid var(--border);">
+    <button style="width:100%;height:52px;border:0;border-radius:12px;background:var(--primary);color:#fff;font-family:inherit;font-size:16px;font-weight:700;cursor:pointer;">Submit report</button>
+  </div>
+
+</div>
+</body>
+</html>
