@@ -1,0 +1,40 @@
+# ── secrets ──
+.env
+.env.*
+!.env.example
+
+# ── node / turborepo ──
+node_modules/
+.pnpm-store/
+.turbo/
+dist/
+build/
+.next/
+out/
+*.tsbuildinfo
+
+# ── prisma ──
+packages/db/prisma/migrations/dev.db*
+
+# ── python (apps/ai) ──
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.mypy_cache/
+.pytest_cache/
+*.egg-info/
+# downloaded model cache
+.cache/
+models/
+
+# ── editors / os ──
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# ── logs / misc ──
+*.log
+npm-debug.log*
+coverage/

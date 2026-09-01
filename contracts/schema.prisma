@@ -1,0 +1,376 @@
+// ─────────────────────────────────────────────────────────────────────────────
+// Societal Innovation Portal · SIH26043 · SHARED DATABASE SCHEMA (source of truth)
+// This file lives at packages/db/prisma/schema.prisma in the monorepo.
+// DO NOT add/rename/remove fields without M1's approval in the team channel.
+// Vector columns (embeddings) are declared as Unsupported — the Python AI service
+// (apps/ai) reads/writes them with raw SQL + pgvector. Prisma only sees them exist.
+// ─────────────────────────────────────────────────────────────────────────────
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["postgresqlExtensions"]
+}
+
+datasource db {
+  provider   = "postgresql"
+  url        = env("DATABASE_URL")
+  extensions = [pgvector(map: "vector")]
+}
+
+// ── ENUMS ────────────────────────────────────────────────────────────────────
+
+enum Role {
+  CITIZEN
+  STUDENT
+  FACULTY
+  UNIVERSITY_ADMIN
+  INDUSTRY
+  GOVERNMENT
+  ADMIN
+}
+
+enum Category {
+  EDUCATION
+  HEALTH
+  WATER
+  AGRICULTURE
+  ENVIRONMENT
+  ENERGY
+  URBAN
+  ACCESSIBILITY
+  GOVERNANCE
+  RURAL_LIVELIHOOD
+  SANITATION
+  INFRASTRUCTURE
+  OTHER
+}
+
+enum ProblemStatus {
+  SUBMITTED        // just created
+  VALIDATED        // passed spam/quality check (A5)
+  CLUSTERED        // merged into a cluster (A2)
+  ROUTED           // matched + assigned to a university (A3)
+  IN_PROGRESS      // team formed / proposal in flight
+  RESOLVED         // solution deployed
+  REJECTED         // spam / invalid
+}
+
+enum Severity {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+enum ProposalStatus {
+  DRAFT
+  SUBMITTED
+  APPROVED
+  REJECTED
+}
+
+enum ProjectStatus {
+  PLANNING
+  IN_EXECUTION
+  PILOT
+  DEPLOYED
+  CLOSED
+}
+
+enum MilestoneStatus {
+  TODO
+  IN_PROGRESS
+  DONE
+  BLOCKED
+}
+
+enum PartnerOffering {
+  FUNDING
+  MENTORING
+  PROTOTYPING
+  PILOT
+  TECH_TRANSFER
+}
+
+enum OutcomeType {
+  PATENT
+  STARTUP
+  IP_TRANSFER
+  PUBLICATION
+  DEPLOYMENT
+}
+
+enum NotificationType {
+  PROBLEM_SUBMITTED
+  PROBLEM_ROUTED
+  TEAM_FORMED
+  PROPOSAL_SUBMITTED
+  PROPOSAL_REVIEWED
+  PARTNER_JOINED
+  MILESTONE_UPDATED
+  OUTCOME_RECORDED
+  GENERIC
+}
+
+// ── IDENTITY & ORG ───────────────────────────────────────────────────────────
+
+model User {
+  id             String    @id @default(cuid())
+  email          String    @unique
+  passwordHash   String
+  name           String
+  role           Role      @default(CITIZEN)
+  phone          String?
+  language       String    @default("en") // "en" | "hi" | "sat" ...
+  universityId   String?
+  university     University? @relation(fields: [universityId], references: [id])
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  facultyProfile   FacultyProfile?
+  industryProfile  IndustryProfile?
+  reportedProblems Problem[]        @relation("Reporter")
+  teamMemberships  TeamMember[]
+  mentoredTeams    Team[]           @relation("Mentor")
+  notifications    Notification[]
+  comments         Comment[]
+}
+
+model University {
+  id        String   @id @default(cuid())
+  name      String
+  district  String
+  type      String?  // "Central" | "State" | "Private" | "Deemed"
+  website   String?
+  latitude  Float?
+  longitude Float?
+  createdAt DateTime @default(now())
+
+  users       User[]
+  departments Department[]
+  faculty     FacultyProfile[]
+  assignments Assignment[]
+  teams       Team[]
+}
+
+model Department {
+  id           String     @id @default(cuid())
+  universityId String
+  university   University  @relation(fields: [universityId], references: [id])
+  name         String
+  faculty      FacultyProfile[]
+}
+
+model FacultyProfile {
+  id            String     @id @default(cuid())
+  userId        String     @unique
+  user          User        @relation(fields: [userId], references: [id])
+  universityId  String
+  university    University   @relation(fields: [universityId], references: [id])
+  departmentId  String?
+  department    Department? @relation(fields: [departmentId], references: [id])
+  designation   String?    // "Professor" | "Assistant Professor" ...
+  researchAreas String[]   // ["water resources", "hydrology", ...]
+  // 384-dim embedding of researchAreas — written by apps/ai (pgvector):
+  // expertiseEmbedding  vector(384)   ← added via SQL migration, see 02-DATA-MODEL
+  createdAt     DateTime   @default(now())
+
+  assignments   Assignment[]
+}
+
+// ── PROBLEMS · CLUSTERS · MEDIA ──────────────────────────────────────────────
+
+model Problem {
+  id            String        @id @default(cuid())
+  title         String
+  description   String
+  category      Category      @default(OTHER)
+  status        ProblemStatus @default(SUBMITTED)
+  severity      Severity      @default(MEDIUM)
+  district      String?
+  latitude      Float?
+  longitude     Float?
+  address       String?
+  language      String        @default("en")
+  reporterId    String
+  reporter      User          @relation("Reporter", fields: [reporterId], references: [id])
+  clusterId     String?
+  cluster       Cluster?      @relation(fields: [clusterId], references: [id])
+  priorityScore Float         @default(0)
+  // 384-dim embedding of title+description — written by apps/ai (pgvector):
+  // embedding  vector(384)   ← added via SQL migration, see 02-DATA-MODEL
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  media       ProblemMedia[]
+  assignment  Assignment?
+  team        Team?
+  proposal    Proposal?
+  project     Project?
+}
+
+model Cluster {
+  id                 String    @id @default(cuid())
+  title              String    // canonical human-readable title
+  category           Category  @default(OTHER)
+  size               Int       @default(1) // "reported by N citizens"
+  canonicalProblemId String?   // representative problem
+  // centroid  vector(384)     ← added via SQL migration
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+
+  problems Problem[]
+}
+
+model ProblemMedia {
+  id        String   @id @default(cuid())
+  problemId String
+  problem   Problem  @relation(fields: [problemId], references: [id], onDelete: Cascade)
+  type      String   // "IMAGE" | "VIDEO" | "DOC"
+  url       String
+  createdAt DateTime @default(now())
+}
+
+// ── ROUTING · TEAMS · PROPOSALS · PROJECTS ───────────────────────────────────
+
+model Assignment {
+  id           String     @id @default(cuid())
+  problemId    String     @unique
+  problem      Problem     @relation(fields: [problemId], references: [id])
+  universityId String
+  university   University   @relation(fields: [universityId], references: [id])
+  facultyId    String?
+  faculty      FacultyProfile? @relation(fields: [facultyId], references: [id])
+  matchScore   Float      @default(0) // cosine similarity from A3
+  reason       String?    // "matched on: water resources, hydrology"
+  createdAt    DateTime   @default(now())
+}
+
+model Team {
+  id           String     @id @default(cuid())
+  problemId    String     @unique
+  problem      Problem     @relation(fields: [problemId], references: [id])
+  universityId String
+  university   University   @relation(fields: [universityId], references: [id])
+  name         String
+  mentorId     String?
+  mentor       User?       @relation("Mentor", fields: [mentorId], references: [id])
+  createdAt    DateTime   @default(now())
+
+  members TeamMember[]
+}
+
+model TeamMember {
+  id     String @id @default(cuid())
+  teamId String
+  team   Team    @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  userId String
+  user   User    @relation(fields: [userId], references: [id])
+  role   String  @default("member") // "member" | "lead"
+
+  @@unique([teamId, userId])
+}
+
+model Proposal {
+  id          String         @id @default(cuid())
+  problemId   String         @unique
+  problem     Problem         @relation(fields: [problemId], references: [id])
+  title       String
+  description String
+  approach    String
+  status      ProposalStatus @default(DRAFT)
+  reviewedBy  String?
+  reviewNote  String?
+  submittedAt DateTime?
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+}
+
+model Project {
+  id        String        @id @default(cuid())
+  problemId String        @unique
+  problem   Problem        @relation(fields: [problemId], references: [id])
+  title     String
+  status    ProjectStatus @default(PLANNING)
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+
+  milestones   Milestone[]
+  partnerships Partnership[]
+  outcomes     Outcome[]
+  comments     Comment[]
+}
+
+model Milestone {
+  id        String          @id @default(cuid())
+  projectId String
+  project   Project          @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  title     String
+  status    MilestoneStatus @default(TODO)
+  dueDate   DateTime?
+  order     Int             @default(0)
+}
+
+// ── INDUSTRY · PARTNERSHIPS · OUTCOMES ───────────────────────────────────────
+
+model IndustryProfile {
+  id          String            @id @default(cuid())
+  userId      String            @unique
+  user        User               @relation(fields: [userId], references: [id])
+  companyName String
+  sector      String            // "solar energy" | "agri-tech" | "IT MSME"
+  offerings   PartnerOffering[]
+  description String?
+  // expertiseEmbedding vector(384) ← for I2 matching, written by apps/ai
+  createdAt   DateTime          @default(now())
+
+  partnerships Partnership[]
+}
+
+model Partnership {
+  id                String          @id @default(cuid())
+  projectId         String
+  project           Project          @relation(fields: [projectId], references: [id])
+  partnerId         String
+  partner           IndustryProfile  @relation(fields: [partnerId], references: [id])
+  role              PartnerOffering
+  fundingCommitted  Float           @default(0)
+  pilotStatus       String?         // "planned" | "running" | "complete"
+  techTransferStage String?         // "none" | "licensing" | "transferred"
+  createdAt         DateTime        @default(now())
+
+  @@unique([projectId, partnerId, role])
+}
+
+model Outcome {
+  id        String      @id @default(cuid())
+  projectId String
+  project   Project      @relation(fields: [projectId], references: [id])
+  type      OutcomeType
+  title     String
+  details   String?
+  date      DateTime    @default(now())
+}
+
+// ── NOTIFICATIONS · MESSAGING ────────────────────────────────────────────────
+
+model Notification {
+  id        String           @id @default(cuid())
+  userId    String
+  user      User              @relation(fields: [userId], references: [id])
+  type      NotificationType @default(GENERIC)
+  message   String
+  link      String?
+  read      Boolean          @default(false)
+  createdAt DateTime         @default(now())
+}
+
+model Comment {
+  id        String   @id @default(cuid())
+  projectId String
+  project   Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User      @relation(fields: [userId], references: [id])
+  body      String
+  createdAt DateTime @default(now())
+}
