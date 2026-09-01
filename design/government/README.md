@@ -7,9 +7,9 @@
 | File | Build as | What it is |
 |------|----------|------------|
 | [`dashboard.html`](dashboard.html) | `app/gov/page.tsx` | KPI cards, category chart, NEP-impact panel, district heatmap (D1, D3) |
-| `map.html` *(coming)* | `app/gov/map/page.tsx` | Full Jharkhand district heatmap (D2, Leaflet) |
-| `nep-impact.html` *(coming)* | `app/gov/impact/page.tsx` | Patents / startups / participation / completion detail (D3) |
-| `review-proposals.html` *(coming)* | `app/gov/proposals/page.tsx` | Approve / reject queue |
+| [`map.html`](map.html) | `app/gov/map/page.tsx` | Full Jharkhand district heatmap (D2, Leaflet) |
+| [`nep-impact.html`](nep-impact.html) | `app/gov/impact/page.tsx` | Patents / startups / participation / completion + by-university table (D3) |
+| [`review-proposals.html`](review-proposals.html) | `app/gov/proposals/page.tsx` | Approve / reject queue |
 
 ## Tell your AI (one line)
 > "Build `apps/web/app/gov/` to match `design/government/*.html`. Use `@repo/ui` + tokens, **Recharts**

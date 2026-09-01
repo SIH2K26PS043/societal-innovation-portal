@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Citizen · My submissions</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+  <style>
+    :root{
+      --primary:hsl(213 85% 30%); --secondary:hsl(152 55% 30%); --accent:hsl(24 88% 45%);
+      --bg:hsl(210 20% 98%); --card:#fff; --fg:hsl(215 28% 14%);
+      --muted:hsl(210 16% 93%); --muted-fg:hsl(215 15% 42%); --border:hsl(214 22% 88%);
+      --warning:hsl(38 90% 40%); --success:hsl(152 55% 35%);
+    }
+    *{box-sizing:border-box;}
+    body{margin:0;font-family:Inter,system-ui,sans-serif;color:var(--fg);}
+  </style>
+</head>
+<body>
+<div style="width:390px;min-height:844px;background:var(--bg);font-family:Inter,system-ui,sans-serif;">
+
+  <div style="display:flex;align-items:center;gap:12px;padding:18px;background:#fff;border-bottom:1px solid var(--border);">
+    <div style="font-size:18px;font-weight:700;">My submissions</div>
+    <span style="margin-left:auto;font-size:12px;font-weight:600;color:var(--muted-fg);background:var(--muted);border-radius:999px;padding:3px 10px;">3</span>
+  </div>
+
+  <div style="padding:16px;display:flex;flex-direction:column;gap:12px;">
+
+    <!-- expanded active -->
+    <div style="background:#fff;border:1px solid var(--primary);border-radius:14px;padding:16px;box-shadow:0 2px 8px hsl(213 85% 30% / .08);">
+      <div style="display:flex;align-items:center;gap:8px;">
+        <span style="font-size:11px;font-weight:600;border-radius:999px;padding:2px 9px;background:#2b8ccc;color:#fff;">Water</span>
+        <span style="font-size:11px;font-weight:600;border-radius:999px;padding:2px 9px;background:var(--primary);color:#fff;">ROUTED</span>
+        <span style="margin-left:auto;font-size:11px;color:var(--muted-fg);">2h ago</span>
+      </div>
+      <div style="font-size:15px;font-weight:700;margin-top:9px;">No water supply — Ranchi ward 4</div>
+      <div style="font-size:12px;color:var(--muted-fg);margin-top:2px;">Merged with 7 others · routed to BIT Mesra</div>
+      <!-- mini timeline -->
+      <div style="display:flex;align-items:center;gap:0;margin-top:14px;">
+        <div style="display:flex;flex-direction:column;align-items:center;flex:1;"><div style="width:16px;height:16px;border-radius:50%;background:var(--success);"></div><span style="font-size:10px;color:var(--muted-fg);margin-top:5px;">Sent</span></div>
+        <div style="height:2px;flex:1;background:var(--success);margin-bottom:16px;"></div>
+        <div style="display:flex;flex-direction:column;align-items:center;flex:1;"><div style="width:16px;height:16px;border-radius:50%;background:var(--success);"></div><span style="font-size:10px;color:var(--muted-fg);margin-top:5px;">AI</span></div>
+        <div style="height:2px;flex:1;background:var(--primary);margin-bottom:16px;"></div>
+        <div style="display:flex;flex-direction:column;align-items:center;flex:1;"><div style="width:16px;height:16px;border-radius:50%;background:var(--primary);border:3px solid hsl(213 85% 30% / .22);"></div><span style="font-size:10px;color:var(--primary);font-weight:700;margin-top:5px;">Routed</span></div>
+        <div style="height:2px;flex:1;background:var(--border);margin-bottom:16px;"></div>
+        <div style="display:flex;flex-direction:column;align-items:center;flex:1;"><div style="width:16px;height:16px;border-radius:50%;background:#fff;border:2px solid var(--border);"></div><span style="font-size:10px;color:var(--muted-fg);margin-top:5px;">Team</span></div>
+      </div>
+    </div>
+
+    <!-- other items -->
+    <div style="background:#fff;border:1px solid var(--border);border-radius:14px;padding:16px;">
+      <div style="display:flex;align-items:center;gap:8px;">
+        <span style="font-size:11px;font-weight:600;border-radius:999px;padding:2px 9px;background:#f5a623;color:#fff;">Energy</span>
+        <span style="font-size:11px;font-weight:600;border-radius:999px;padding:2px 9px;background:var(--warning);color:#fff;">IN PROGRESS</span>
+        <span style="margin-left:auto;font-size:11px;color:var(--muted-fg);">5d ago</span>
+      </div>
+      <div style="font-size:15px;font-weight:700;margin-top:9px;">Frequent power cuts in village</div>
+      <div style="font-size:12px;color:var(--muted-fg);margin-top:2px;">Team formed at IIT-ISM Dhanbad</div>
+    </div>
+
+    <div style="background:#fff;border:1px solid var(--border);border-radius:14px;padding:16px;">
+      <div style="display:flex;align-items:center;gap:8px;">
+        <span style="font-size:11px;font-weight:600;border-radius:999px;padding:2px 9px;background:#6d9dc5;color:#fff;">Sanitation</span>
+        <span style="font-size:11px;font-weight:600;border-radius:999px;padding:2px 9px;background:var(--success);color:#fff;">RESOLVED</span>
+        <span style="margin-left:auto;font-size:11px;color:var(--muted-fg);">3w ago</span>
+      </div>
+      <div style="font-size:15px;font-weight:700;margin-top:9px;">Blocked drain near market</div>
+      <div style="font-size:12px;color:var(--muted-fg);margin-top:2px;">Fixed · solution deployed</div>
+    </div>
+
+  </div>
+</div>
+</body>
+</html>

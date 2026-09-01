@@ -4,16 +4,15 @@
 `/api/partnerships`, `/api/projects`, `/api/notifications`.
 **Requirements:** I1, I2, I3, P1, P2, N1, N2.
 
-## Screens (being added in the next design wave)
+## Screens here
 | File | Build as | What it is |
 |------|----------|------------|
-| `register.html` | `app/industry/register/page.tsx` | Company, sector, offerings (I1) |
-| `opportunities.html` | `app/industry/page.tsx` | Projects matched to your sector (I2) |
-| `project-detail.html` | `app/project/[id]/page.tsx` | Project + team + milestones + how to help (P1) |
-| `contribute.html` | `app/project/[id]/partner/page.tsx` | Offer funding / mentoring, track pilot + outcomes (I3, P2) |
+| [`register.html`](register.html) | `app/industry/register/page.tsx` | Company, sector, offerings (I1) |
+| [`opportunities.html`](opportunities.html) | `app/industry/page.tsx` | Projects matched to your sector, with match score (I2) |
+| [`project-detail.html`](project-detail.html) | `app/project/[id]/page.tsx` | Project + team + milestones + how to help (P1) |
+| [`contribute.html`](contribute.html) | `app/project/[id]/partner/page.tsx` | Offer funding / mentoring, track pilot + outcomes (I3, P2) |
 
-Until the HTML lands, build against the **Industry flow** in
-[`docs/05-USER-FLOWS.md`](../../docs/05-USER-FLOWS.md) and `@repo/ui`.
+Reference the **Industry flow** in [`docs/05-USER-FLOWS.md`](../../docs/05-USER-FLOWS.md) for behaviour.
 
 ## Tell your AI (one line)
 > "Build `apps/web/app/industry/` and `app/project/` to match `design/industry/*.html`. Use `@repo/ui`

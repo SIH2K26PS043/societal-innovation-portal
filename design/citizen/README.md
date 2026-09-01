@@ -8,7 +8,7 @@
 |------|----------|------------|
 | [`submit.html`](submit.html) | `app/citizen/page.tsx` (or `app/citizen/report/page.tsx`) | The report form — title, description, auto-category, severity, map pin + GPS, photo/video (C1, C2, C3) |
 | [`confirm.html`](confirm.html) | shown after a successful submit | "Reported by N" + "routed to Prof X" + status timeline |
-| `track.html` *(coming)* | `app/citizen/submissions/page.tsx` | My submissions with status (C4) |
+| [`track.html`](track.html) | `app/citizen/submissions/page.tsx` | My submissions with status timeline (C4) |
 
 These are **phone screens** — build mobile-first (works at 375px), 44px+ tap targets.
 

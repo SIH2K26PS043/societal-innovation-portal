@@ -7,7 +7,7 @@
 | File | Build as | What it is |
 |------|----------|------------|
 | [`landing.html`](landing.html) | `app/page.tsx` | Marketing landing — hero, 3 winning features, lifecycle strip, footer |
-| `login.html` *(coming)* | `app/(auth)/login/page.tsx` | Sign in (already scaffolded — restyle to match) |
+| [`login.html`](login.html) | `app/(auth)/login/page.tsx` | Split-screen sign in (already scaffolded — restyle to match) |
 
 ## Tell your AI (one line)
 > "Build the landing + auth pages to match `design/shared/*.html`. Use `@repo/ui` + tokens, wire auth
