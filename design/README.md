@@ -18,6 +18,7 @@ person building that module opens **one place** and finds everything they need: 
 |--------|--------|-------|---------|
 | [`shared/`](shared/) | Landing + auth | **M1** | landing, login |
 | [`citizen/`](citizen/) | Citizen | **M2** | submit, confirm, track |
+| [`ai-service/`](ai-service/) | AI service | **M3** | *no screens* — powers the AI moments in every other screen |
 | [`university/`](university/) | University | **M4** | queue, problem-detail, create-team, proposal, board |
 | [`industry/`](industry/) | Industry + project | **M5** | register, opportunities, project-detail, contribute |
 | [`government/`](government/) | Gov dashboard | **M6** | dashboard, map, nep-impact, review-proposals |
