@@ -25,10 +25,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # pnpm version comes from package.json "packageManager" (pnpm@9.15.9).
+      # Do NOT also set `version:` here — the action errors on a double spec.
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
-        with:
-          version: 9
 
       - name: Setup Node
         uses: actions/setup-node@v4
