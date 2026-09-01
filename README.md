@@ -33,16 +33,25 @@ All 6 members build against **shared contracts** so nobody's AI drifts:
 **AI (`apps/ai`):** Python · FastAPI · sentence-transformers (384-dim) · pgvector · scikit-learn · Groq/Gemini/Ollama
 **Data/infra:** Postgres + pgvector (Supabase) · Supabase Storage · Vercel · Render — **all free tier**
 
-## 🚀 Local dev (once M1 scaffolds Day 1)
+## 🚀 Local dev (scaffold is in place — verified: installs, typechecks, builds)
 ```bash
 pnpm install
-cp .env.example .env         # fill in secrets
-pnpm db:migrate              # prisma migrate + manual vector SQL
-pnpm db:seed                 # seed Jharkhand data + embeddings
-pnpm dev                     # apps/web on :3000
-# AI service:
-cd apps/ai && pip install -r requirements.txt && uvicorn app.main:app --reload --port 8000
+cp .env.example .env                 # fill in DATABASE_URL, NEXTAUTH_SECRET, etc.
+pnpm db:generate                     # prisma client
+pnpm db:migrate                      # create tables
+psql "$DIRECT_URL" -f packages/db/prisma/migrations/manual_vectors.sql   # pgvector columns
+pnpm db:seed                         # Jharkhand universities/faculty + citizen problems (incl. dupes)
+pnpm dev                             # apps/web on http://localhost:3000
 ```
+AI service (separate terminal — Python 3.11 recommended):
+```bash
+cd apps/ai
+python -m venv .venv && . .venv/Scripts/activate
+pip install -r requirements.txt
+uvicorn app.main:app --reload --port 8000
+python -m app.scripts.backfill_embeddings   # after db:seed — embeds faculty + clusters/routes seed problems
+```
+Demo logins (password `password`): `citizen@demo.in` · `gov@demo.in` · `industry@demo.in` · `admin@demo.in`.
 
 ## 👥 Team & modules
 | M1 Foundations | M2 Citizen | M3 AI Service | M4 University | M5 Industry+Lifecycle | M6 Gov+DataViz |
