@@ -1,0 +1,65 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+# Cancel superseded runs on the same ref (e.g. new push to a PR).
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  web:
+    name: Typecheck & build (web + packages)
+    runs-on: ubuntu-latest
+    # Dummy values so `prisma generate` and `next build` don't fail on missing env.
+    # These are NOT secrets — no real database is contacted during CI.
+    env:
+      DATABASE_URL: postgresql://ci:ci@localhost:5432/ci
+      DIRECT_URL: postgresql://ci:ci@localhost:5432/ci
+      NEXTAUTH_SECRET: ci-dummy-secret-ci-dummy-secret-0000
+      AI_SERVICE_URL: http://localhost:8000
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Generate Prisma client
+        run: pnpm db:generate
+
+      - name: Typecheck (all packages + web)
+        run: pnpm typecheck
+
+      - name: Build web
+        run: pnpm build
+
+  ai:
+    name: Syntax check (apps/ai)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      # Fast smoke check — compiles every module without installing heavy ML deps
+      # (torch/sentence-transformers). Catches syntax errors on every PR.
+      - name: Compile Python sources
+        run: python -m py_compile apps/ai/app/*.py apps/ai/app/scripts/*.py

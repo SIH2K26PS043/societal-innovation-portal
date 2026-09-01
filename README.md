@@ -1,5 +1,7 @@
 # Societal Innovation Portal · SIH26043
 
+[![CI](https://github.com/SIH2K26PS043/societal-innovation-portal/actions/workflows/ci.yml/badge.svg)](https://github.com/SIH2K26PS043/societal-innovation-portal/actions/workflows/ci.yml)
+
 A digital platform that crowdsources societal challenges from citizens and turns them into
 **university innovation projects** with **industry partnership** — built around **NEP 2020** for the
 Government of Jharkhand, Department of Higher & Technical Education.
