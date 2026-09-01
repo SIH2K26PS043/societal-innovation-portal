@@ -3,17 +3,16 @@
 **You own:** `apps/web/app/university/*` and `/api/teams`, `/api/proposals`.
 **Requirements:** U1, U2, U3, U4.
 
-## Screens (being added in the next design wave)
+## Screens here
 | File | Build as | What it is |
 |------|----------|------------|
-| `queue.html` | `app/university/page.tsx` | Matched problem queue — cards with category, cluster size, match score (U1) |
-| `problem-detail.html` | `app/university/problems/[id]/page.tsx` | Full problem + evidence + "why it matched" + actions |
-| `create-team.html` | `app/university/teams/new/page.tsx` | Pick students + assign mentor (U2) |
-| `proposal.html` | `app/university/proposals/new/page.tsx` | Title / description / approach (U3) |
-| `board.html` | `app/university/projects/[id]/page.tsx` | Milestone board (U4) |
+| [`queue.html`](queue.html) | `app/university/page.tsx` | Matched problem queue — cards with category, cluster size, match score (U1) |
+| [`problem-detail.html`](problem-detail.html) | `app/university/problems/[id]/page.tsx` | Full problem + evidence + "why it matched" + actions |
+| [`create-team.html`](create-team.html) | `app/university/teams/new/page.tsx` | Pick students + assign mentor (U2) |
+| [`proposal.html`](proposal.html) | `app/university/proposals/new/page.tsx` | Title / description / approach (U3) |
+| [`board.html`](board.html) | `app/university/projects/[id]/page.tsx` | Milestone board (U4) |
 
-Until the HTML lands, build against the **University flow** in
-[`docs/05-USER-FLOWS.md`](../../docs/05-USER-FLOWS.md) and `@repo/ui`.
+Reference the **University flow** in [`docs/05-USER-FLOWS.md`](../../docs/05-USER-FLOWS.md) for behaviour.
 
 ## Tell your AI (one line)
 > "Build `apps/web/app/university/` to match `design/university/*.html`. Use `@repo/ui` + tokens,

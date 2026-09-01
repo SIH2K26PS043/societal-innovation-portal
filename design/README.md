@@ -18,7 +18,7 @@ person building that module opens **one place** and finds everything they need: 
 |--------|--------|-------|---------|
 | [`shared/`](shared/) | Landing + auth | **M1** | landing, login* |
 | [`citizen/`](citizen/) | Citizen | **M2** | submit, confirm, track* |
-| [`university/`](university/) | University | **M4** | queue*, problem-detail*, create-team*, proposal*, board* |
+| [`university/`](university/) | University | **M4** | queue, problem-detail, create-team, proposal, board |
 | [`industry/`](industry/) | Industry + project | **M5** | register*, opportunities*, project-detail*, contribute* |
 | [`government/`](government/) | Gov dashboard | **M6** | dashboard, map*, nep-impact*, review-proposals* |
 | [`system/`](system/) | Design system | everyone | design-system |

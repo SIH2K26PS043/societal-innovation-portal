@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>University · Matched queue</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+  <style>
+    :root{
+      --primary:hsl(213 85% 30%); --secondary:hsl(152 55% 30%); --accent:hsl(24 88% 45%);
+      --bg:hsl(210 20% 97%); --card:#fff; --fg:hsl(215 28% 14%);
+      --muted:hsl(210 16% 93%); --muted-fg:hsl(215 15% 42%); --border:hsl(214 22% 88%);
+      --sidebar:hsl(214 44% 12%);
+    }
+    *{box-sizing:border-box;}
+    body{margin:0;font-family:Inter,system-ui,sans-serif;color:var(--fg);}
+  </style>
+</head>
+<body>
+<div style="width:1440px;min-height:1040px;background:var(--bg);font-family:Inter,system-ui,sans-serif;display:flex;">
+
+  <!-- sidebar -->
+  <div style="width:212px;flex:none;background:var(--sidebar);color:#fff;padding:22px 14px;display:flex;flex-direction:column;gap:5px;">
+    <div style="display:flex;align-items:center;gap:10px;padding:6px 8px 20px;">
+      <div style="width:28px;height:28px;border-radius:8px;background:linear-gradient(135deg,var(--primary),var(--secondary));"></div>
+      <span style="font-weight:700;font-size:14px;">Innovation Portal</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:11px;padding:9px 12px;border-radius:9px;background:rgba(255,255,255,.12);font-size:14px;font-weight:600;">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="4" rx="1"/><rect x="3" y="10" width="18" height="4" rx="1"/><rect x="3" y="16" width="18" height="4" rx="1"/></svg>
+      Matched queue
+    </div>
+    <div style="display:flex;align-items:center;gap:11px;padding:9px 12px;border-radius:9px;color:hsl(213 25% 74%);font-size:14px;font-weight:500;">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="7" r="3"/><path d="M2 21v-2a5 5 0 0 1 5-5h4a5 5 0 0 1 5 5v2"/><path d="M16 3a4 4 0 0 1 0 8"/></svg>
+      Teams
+    </div>
+    <div style="display:flex;align-items:center;gap:11px;padding:9px 12px;border-radius:9px;color:hsl(213 25% 74%);font-size:14px;font-weight:500;">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M9 13h6M9 17h6"/></svg>
+      Proposals
+    </div>
+    <div style="display:flex;align-items:center;gap:11px;padding:9px 12px;border-radius:9px;color:hsl(213 25% 74%);font-size:14px;font-weight:500;">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3 8-8"/><path d="M20 12v7a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h9"/></svg>
+      Projects
+    </div>
+    <div style="margin-top:auto;display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:9px;background:rgba(255,255,255,.06);">
+      <div style="width:30px;height:30px;border-radius:50%;background:var(--primary);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;">BM</div>
+      <div><div style="font-size:12px;font-weight:600;">BIT Mesra</div><div style="font-size:11px;color:hsl(213 25% 68%);">University admin</div></div>
+    </div>
+  </div>
+
+  <!-- main -->
+  <div style="flex:1;min-width:0;">
+    <div style="height:64px;display:flex;align-items:center;gap:16px;padding:0 30px;background:#fff;border-bottom:1px solid var(--border);">
+      <div style="font-size:18px;font-weight:700;letter-spacing:-.01em;">Matched to your expertise</div>
+      <span style="font-size:13px;color:var(--muted-fg);background:var(--muted);border-radius:999px;padding:3px 10px;font-weight:600;">6 open</span>
+      <div style="margin-left:auto;display:flex;gap:9px;">
+        <div style="display:flex;align-items:center;gap:8px;height:36px;padding:0 12px;border:1px solid var(--border);border-radius:9px;font-size:13px;font-weight:600;color:var(--muted-fg);">All categories<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></div>
+        <div style="display:flex;align-items:center;gap:8px;height:36px;padding:0 12px;border:1px solid var(--border);border-radius:9px;font-size:13px;font-weight:600;color:var(--muted-fg);">Highest match</div>
+      </div>
+    </div>
+
+    <div style="padding:26px 30px;display:grid;grid-template-columns:1fr 1fr;gap:18px;">
+
+      <!-- card 1 (high match) -->
+      <div style="background:#fff;border:1px solid var(--border);border-radius:14px;padding:20px;box-shadow:0 1px 2px rgba(20,40,70,.04);">
+        <div style="display:flex;align-items:center;gap:9px;margin-bottom:12px;">
+          <span style="font-size:12px;font-weight:600;border-radius:999px;padding:3px 10px;background:#2b8ccc;color:#fff;">Water</span>
+          <span style="font-size:12px;font-weight:600;border-radius:999px;padding:3px 10px;background:hsl(0 72% 51% / .12);color:hsl(0 72% 45%);">High severity</span>
+          <span style="margin-left:auto;display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:var(--muted-fg);"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="7" r="3"/><path d="M2 21v-2a5 5 0 0 1 5-5h4a5 5 0 0 1 5 5v2"/></svg>reported by 8</span>
+        </div>
+        <div style="font-size:17px;font-weight:700;letter-spacing:-.01em;">No water supply — Ranchi ward 4</div>
+        <div style="font-size:13px;color:var(--muted-fg);margin-top:4px;line-height:1.5;">Pipeline burst near the railway station; no supply for 3 days.</div>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-top:16px;padding-top:14px;border-top:1px solid var(--border);">
+          <div style="font-size:13px;color:var(--muted-fg);">Best fit: <strong style="color:var(--fg);">Dr. A. Verma</strong> · <span style="color:var(--secondary);font-weight:700;">0.88</span></div>
+          <button style="height:36px;padding:0 15px;border:0;border-radius:8px;background:var(--primary);color:#fff;font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;">Form team</button>
+        </div>
+      </div>
+
+      <!-- card 2 -->
+      <div style="background:#fff;border:1px solid var(--border);border-radius:14px;padding:20px;box-shadow:0 1px 2px rgba(20,40,70,.04);">
+        <div style="display:flex;align-items:center;gap:9px;margin-bottom:12px;">
+          <span style="font-size:12px;font-weight:600;border-radius:999px;padding:3px 10px;background:#6d9dc5;color:#fff;">Sanitation</span>
+          <span style="margin-left:auto;display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:var(--muted-fg);"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="7" r="3"/><path d="M2 21v-2a5 5 0 0 1 5-5h4a5 5 0 0 1 5 5v2"/></svg>reported by 3</span>
+        </div>
+        <div style="font-size:17px;font-weight:700;letter-spacing:-.01em;">Primary school has no toilets</div>
+        <div style="font-size:13px;color:var(--muted-fg);margin-top:4px;line-height:1.5;">Sanitation facilities missing at the government primary school.</div>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-top:16px;padding-top:14px;border-top:1px solid var(--border);">
+          <div style="font-size:13px;color:var(--muted-fg);">Best fit: <strong style="color:var(--fg);">Dr. S. Kumari</strong> · <span style="color:var(--secondary);font-weight:700;">0.74</span></div>
+          <button style="height:36px;padding:0 15px;border:0;border-radius:8px;background:var(--primary);color:#fff;font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;">Form team</button>
+        </div>
+      </div>
+
+      <!-- card 3 -->
+      <div style="background:#fff;border:1px solid var(--border);border-radius:14px;padding:20px;box-shadow:0 1px 2px rgba(20,40,70,.04);">
+        <div style="display:flex;align-items:center;gap:9px;margin-bottom:12px;">
+          <span style="font-size:12px;font-weight:600;border-radius:999px;padding:3px 10px;background:#5aa02c;color:#fff;">Agriculture</span>
+          <span style="margin-left:auto;display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:var(--muted-fg);"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="7" r="3"/><path d="M2 21v-2a5 5 0 0 1 5-5h4a5 5 0 0 1 5 5v2"/></svg>reported by 5</span>
+        </div>
+        <div style="font-size:17px;font-weight:700;letter-spacing:-.01em;">Soil erosion damaging farms</div>
+        <div style="font-size:13px;color:var(--muted-fg);margin-top:4px;line-height:1.5;">Heavy erosion is reducing crop yield across several villages.</div>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-top:16px;padding-top:14px;border-top:1px solid var(--border);">
+          <div style="font-size:13px;color:var(--muted-fg);">Best fit: <strong style="color:var(--fg);">Dr. S. Kumari</strong> · <span style="color:var(--secondary);font-weight:700;">0.81</span></div>
+          <button style="height:36px;padding:0 15px;border:0;border-radius:8px;background:var(--primary);color:#fff;font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;">Form team</button>
+        </div>
+      </div>
+
+      <!-- card 4 -->
+      <div style="background:#fff;border:1px solid var(--border);border-radius:14px;padding:20px;box-shadow:0 1px 2px rgba(20,40,70,.04);">
+        <div style="display:flex;align-items:center;gap:9px;margin-bottom:12px;">
+          <span style="font-size:12px;font-weight:600;border-radius:999px;padding:3px 10px;background:#f5a623;color:#fff;">Energy</span>
+          <span style="margin-left:auto;display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:var(--muted-fg);"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="7" r="3"/><path d="M2 21v-2a5 5 0 0 1 5-5h4a5 5 0 0 1 5 5v2"/></svg>reported by 4</span>
+        </div>
+        <div style="font-size:17px;font-weight:700;letter-spacing:-.01em;">Frequent power cuts in village</div>
+        <div style="font-size:13px;color:var(--muted-fg);margin-top:4px;line-height:1.5;">Under 6 hours of electricity; needs a reliable solar solution.</div>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-top:16px;padding-top:14px;border-top:1px solid var(--border);">
+          <div style="font-size:13px;color:var(--muted-fg);">Best fit: <strong style="color:var(--fg);">Dr. R. Singh</strong> · <span style="color:var(--secondary);font-weight:700;">0.79</span></div>
+          <button style="height:36px;padding:0 15px;border:0;border-radius:8px;background:var(--primary);color:#fff;font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;">Form team</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+</body>
+</html>
