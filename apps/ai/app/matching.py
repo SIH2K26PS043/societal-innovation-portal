@@ -1,5 +1,5 @@
-"""Dedup/clustering (A2) + expertise matching (A3) + priority (A4).
-These are the differentiating features — refine here (M3)."""
+"""Dedup/clustering (A2) + expertise matching (A3) + industry matching (I2) +
+priority (A4). These are the differentiating features — refine here (M3)."""
 import math
 from typing import Optional
 
@@ -11,6 +11,30 @@ from .embeddings import embed_one
 def _reason(research_areas) -> str:
     areas = (research_areas or [])[:3]
     return "matched on: " + ", ".join(areas) if areas else "closest expertise match"
+
+
+# ── priority (A4) — deliberately transparent so it's explainable to judges ──────
+# score = log(clusterSize+1)*W_SIZE + severityHits*W_SEV + categoryWeight
+W_SIZE, W_SEV = 2.0, 0.6
+CATEGORY_WEIGHT = {
+    "HEALTH": 1.5, "WATER": 1.5, "SANITATION": 1.2, "ENERGY": 1.0,
+    "INFRASTRUCTURE": 0.8, "AGRICULTURE": 0.8, "ENVIRONMENT": 0.6,
+}
+SEVERITY_WORDS = [
+    "burst", "urgent", "emergency", "children", "child", "died", "death", "danger",
+    "collapse", "fire", "flood", "injured", "outbreak", "hospital", "no water",
+    "days", "week", "severe", "critical", "contaminated",
+]
+
+
+def count_severity(text: str) -> int:
+    t = (text or "").lower()
+    return sum(1 for w in SEVERITY_WORDS if w in t)
+
+
+def priority_score(cluster_size: int, category: Optional[str], severity_hits: int) -> float:
+    base = math.log(cluster_size + 1) * W_SIZE
+    return round(base + severity_hits * W_SEV + CATEGORY_WEIGHT.get(category or "", 0.0), 2)
 
 
 async def process(problem_id: str, title: str, description: str, category: Optional[str]):
@@ -43,8 +67,7 @@ async def process(problem_id: str, title: str, description: str, category: Optio
         }
 
     # ── priority (A4) — transparent, explainable ──
-    bump = 1.5 if category in ("WATER", "HEALTH") else 0.0
-    priority = round(math.log(cluster_size + 1) * 2.0 + bump, 2)
+    priority = priority_score(cluster_size, category, count_severity(text))
 
     return {
         "clusterId": cluster_id,
@@ -70,6 +93,26 @@ async def match_university(problem_id: Optional[str], text: Optional[str]):
                 "facultyId": m["faculty_id"],
                 "score": round(float(m["score"]), 3),
                 "reason": _reason(m.get("research_areas")),
+            }
+            for m in matches
+        ]
+    }
+
+
+async def match_industry(problem_id: Optional[str], text: Optional[str]):
+    """I2 — rank industry partners by expertise similarity to a problem/project."""
+    if not text and problem_id:
+        text = await db.get_problem_text(problem_id)
+    if not text:
+        return {"matches": []}
+    vec = embed_one(text)
+    matches = await db.match_industry(vec, limit=3)
+    return {
+        "matches": [
+            {
+                "partnerId": m["partner_id"],
+                "score": round(float(m["score"]), 3),
+                "reason": f"sector: {m['sector']}" if m.get("sector") else "closest partner match",
             }
             for m in matches
         ]

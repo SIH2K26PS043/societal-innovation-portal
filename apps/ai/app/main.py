@@ -5,7 +5,7 @@ from fastapi import Depends, FastAPI, Header, HTTPException
 from . import categorize as cat
 from . import embeddings, matching
 from .config import AI_SERVICE_KEY
-from .schemas import (CategorizeReq, EmbedReq, MatchReq, ProcessReq, ValidateReq, fail, ok)
+from .schemas import (CategorizeReq, EmbedReq, MatchReq, PriorityReq, ProcessReq, ValidateReq, fail, ok)
 
 app = FastAPI(title="SIH26043 AI Service", version="0.1.0")
 
@@ -50,6 +50,23 @@ async def process(req: ProcessReq):
 async def match_university(req: MatchReq):
     try:
         return ok(await matching.match_university(req.problemId, req.text))
+    except Exception as e:  # noqa: BLE001
+        return fail("SERVER", str(e))
+
+
+@app.post("/match/industry", dependencies=[Depends(require_key)])
+async def match_industry(req: MatchReq):
+    try:
+        return ok(await matching.match_industry(req.problemId, req.text))
+    except Exception as e:  # noqa: BLE001
+        return fail("SERVER", str(e))
+
+
+@app.post("/priority", dependencies=[Depends(require_key)])
+async def priority(req: PriorityReq):
+    try:
+        score = matching.priority_score(req.clusterSize, req.category, len(req.severityKeywords))
+        return ok({"score": score})
     except Exception as e:  # noqa: BLE001
         return fail("SERVER", str(e))
 

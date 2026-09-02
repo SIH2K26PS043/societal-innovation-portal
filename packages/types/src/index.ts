@@ -174,3 +174,19 @@ export type AiProcessRes = {
   priorityScore: number;
 };
 export type AiMatch = { universityId: string; facultyId: string | null; score: number; reason: string };
+
+export const AiEmbedReq = z.object({ texts: z.array(z.string()) });
+export type AiEmbedRes = { embeddings: number[][] };
+
+export const AiMatchReq = z.object({ problemId: z.string().optional(), text: z.string().optional() });
+export type AiIndustryMatch = { partnerId: string; score: number; reason: string };
+
+export const AiValidateReq = z.object({ title: z.string(), description: z.string() });
+export type AiValidateRes = { isValid: boolean; isSpam: boolean; quality: number; reason: string };
+
+export const AiPriorityReq = z.object({
+  clusterSize: z.number().int(),
+  category: Category.optional(),
+  severityKeywords: z.array(z.string()).default([]),
+});
+export type AiPriorityRes = { score: number };

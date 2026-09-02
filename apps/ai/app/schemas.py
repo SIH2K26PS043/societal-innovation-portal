@@ -30,6 +30,12 @@ class ValidateReq(BaseModel):
     description: str
 
 
+class PriorityReq(BaseModel):
+    clusterSize: int
+    category: Optional[str] = None
+    severityKeywords: list[str] = []
+
+
 def ok(data):
     return {"data": data, "error": None}
 

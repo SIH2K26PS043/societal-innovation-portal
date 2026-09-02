@@ -30,11 +30,20 @@ def keyword_category(text: str) -> tuple[str, float]:
     return best, (min(0.5 + 0.1 * hits, 0.85) if hits else 0.3)
 
 
+def _extract_category(raw: str) -> str | None:
+    """LLMs sometimes reply 'Category: WATER.' — pull the first valid label out."""
+    up = (raw or "").upper()
+    for c in CATEGORIES:
+        if c in up:
+            return c
+    return None
+
+
 async def categorize(title: str, description: str) -> tuple[str, float]:
     text = f"{title}. {description}"
     try:
-        cat = await _llm_category(text)
-        if cat in CATEGORIES:
+        cat = _extract_category(await _llm_category(text))
+        if cat:
             return cat, 0.9
     except Exception:
         pass
