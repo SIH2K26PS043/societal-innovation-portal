@@ -19,17 +19,17 @@ async def main():
         # 1) faculty expertise embeddings
         faculty = await c.fetch('SELECT id, "researchAreas" FROM "FacultyProfile" WHERE "expertiseEmbedding" IS NULL')
         for r in faculty:
-            areas = r["researchAreas"] or []
-            if areas:
-                await db.store_faculty_embedding(r["id"], embed_one(", ".join(areas)))
+            txt = matching.faculty_expertise_text(r["researchAreas"])
+            if txt:
+                await db.store_faculty_embedding(r["id"], embed_one(txt))
 
-        # 2) industry partner expertise embeddings (sector + company + description)
+        # 2) industry partner expertise embeddings
         industry = await c.fetch(
             'SELECT id, "companyName", sector, description FROM "IndustryProfile" WHERE "expertiseEmbedding" IS NULL')
         for r in industry:
-            parts = [p for p in (r["sector"], r["companyName"], r["description"]) if p]
-            if parts:
-                await db.store_industry_embedding(r["id"], embed_one(". ".join(parts)))
+            txt = matching.industry_expertise_text(r["companyName"], r["sector"], r["description"])
+            if txt:
+                await db.store_industry_embedding(r["id"], embed_one(txt))
 
         # 3) run the full pipeline on every problem (embed + cluster + match)
         problems = await c.fetch('SELECT id, title, description, category::text AS category FROM "Problem"')

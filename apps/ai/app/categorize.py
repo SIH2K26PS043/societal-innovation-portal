@@ -2,7 +2,7 @@
 rules — so it always returns something, even fully offline (X4 demo safety)."""
 import httpx
 
-from .config import (LLM_PROVIDER, GROQ_API_KEY, GEMINI_API_KEY, OLLAMA_BASE_URL, CATEGORIES)
+from .config import (LLM_PROVIDER, GROQ_API_KEY, GEMINI_API_KEY, OLLAMA_BASE_URL, CATEGORIES, SEED_MODE)
 
 KEYWORDS = {
     "WATER": ["water", "pipeline", "tap", "drinking", "borewell", "well", "drainage"],
@@ -41,12 +41,14 @@ def _extract_category(raw: str) -> str | None:
 
 async def categorize(title: str, description: str) -> tuple[str, float]:
     text = f"{title}. {description}"
-    try:
-        cat = _extract_category(await _llm_category(text))
-        if cat:
-            return cat, 0.9
-    except Exception:
-        pass
+    # SEED_MODE (X4): skip the LLM so rehearsed demos are 100% reproducible.
+    if not SEED_MODE:
+        try:
+            cat = _extract_category(await _llm_category(text))
+            if cat:
+                return cat, 0.9
+        except Exception:
+            pass
     return keyword_category(text)
 
 

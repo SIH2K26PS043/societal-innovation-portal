@@ -13,6 +13,18 @@ def _reason(research_areas) -> str:
     return "matched on: " + ", ".join(areas) if areas else "closest expertise match"
 
 
+def faculty_expertise_text(areas) -> str:
+    """Text embedded as a faculty's expertise vector. Measured: the bare
+    research-area terms sit closer to a civic-complaint vector than an academic
+    sentence does ("Research expertise in ..." scored lower), so keep it terse."""
+    return ", ".join(a for a in (areas or []) if a)
+
+
+def industry_expertise_text(company: str, sector: str, description: str) -> str:
+    # sector first — it's the strongest matching signal against a problem.
+    return ". ".join(p for p in (sector, company, description) if p)
+
+
 # ── priority (A4) — deliberately transparent so it's explainable to judges ──────
 # score = log(clusterSize+1)*W_SIZE + severityHits*W_SEV + categoryWeight
 W_SIZE, W_SEV = 2.0, 0.6
@@ -46,10 +58,16 @@ async def process(problem_id: str, title: str, description: str, category: Optio
     similar = await db.similar_problems(vec, exclude_id=problem_id, limit=10)
     dupes = [s for s in similar if s["score"] >= DEDUP_THRESHOLD]
 
-    cluster_id = next((s["cluster_id"] for s in dupes if s["cluster_id"]), None)
+    # Idempotent: keep the problem in its own cluster if it already has one,
+    # else join a near-duplicate's cluster, else start a new one.
+    own = await db.get_problem_cluster(problem_id)
+    cluster_id = own or next((s["cluster_id"] for s in dupes if s["cluster_id"]), None)
     if cluster_id is None:
         cluster_id = await db.create_cluster(title[:120], category or "OTHER", vec)
-    cluster_size = await db.assign_cluster(problem_id, cluster_id)
+    await db.attach_to_cluster(problem_id, cluster_id)
+    cluster_size = await db.recompute_cluster(cluster_id)
+    if own and own != cluster_id:
+        await db.recompute_cluster(own)  # fix the cluster it left
 
     # ── expertise match ──
     matches = await db.match_faculty(vec, limit=5)

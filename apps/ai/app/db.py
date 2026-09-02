@@ -7,17 +7,17 @@ import uuid
 from datetime import datetime, timezone
 from typing import Optional
 
-
-def _now():
-    # Prisma DateTime columns are `timestamp` WITHOUT time zone; asyncpg needs a
-    # naive datetime (a tz-aware one raises "can't subtract offset-naive/aware").
-    return datetime.now(timezone.utc).replace(tzinfo=None)
-
 import asyncpg
 import numpy as np
 from pgvector.asyncpg import register_vector
 
 from .config import DATABASE_URL
+
+
+def _now():
+    # Prisma DateTime columns are `timestamp` WITHOUT time zone; asyncpg needs a
+    # naive datetime (a tz-aware one raises "can't subtract offset-naive/aware").
+    return datetime.now(timezone.utc).replace(tzinfo=None)
 
 _pool: Optional[asyncpg.Pool] = None
 
@@ -83,13 +83,38 @@ async def similar_problems(vec: list[float], exclude_id: str, limit: int = 10):
         return [dict(r) for r in rows]
 
 
-async def assign_cluster(problem_id: str, cluster_id: str):
+async def get_problem_cluster(problem_id: str) -> Optional[str]:
+    pool = await get_pool()
+    async with pool.acquire() as c:
+        return await c.fetchval('SELECT "clusterId" FROM "Problem" WHERE id = $1', problem_id)
+
+
+async def attach_to_cluster(problem_id: str, cluster_id: str):
     pool = await get_pool()
     async with pool.acquire() as c:
         await c.execute('UPDATE "Problem" SET "clusterId" = $1 WHERE id = $2', cluster_id, problem_id)
+
+
+async def recompute_cluster(cluster_id: str) -> int:
+    """Refresh a cluster's size, centroid (mean of member embeddings) and
+    canonicalProblemId (earliest report). An emptied cluster is deleted."""
+    pool = await get_pool()
+    async with pool.acquire() as c:
         size = await c.fetchval('SELECT COUNT(*) FROM "Problem" WHERE "clusterId" = $1', cluster_id)
-        await c.execute('UPDATE "Cluster" SET size = $1, "updatedAt" = $2 WHERE id = $3',
-                        size, _now(), cluster_id)
+        if not size:
+            await c.execute('DELETE FROM "Cluster" WHERE id = $1', cluster_id)
+            return 0
+        await c.execute(
+            '''UPDATE "Cluster" SET
+                 size = $1,
+                 centroid = (SELECT AVG(embedding) FROM "Problem"
+                             WHERE "clusterId" = $2 AND embedding IS NOT NULL),
+                 "canonicalProblemId" = (SELECT id FROM "Problem"
+                             WHERE "clusterId" = $2 ORDER BY "createdAt" ASC LIMIT 1),
+                 "updatedAt" = $3
+               WHERE id = $2''',
+            size, cluster_id, _now(),
+        )
         return size
 
 
