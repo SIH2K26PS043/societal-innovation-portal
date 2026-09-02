@@ -65,6 +65,13 @@ export async function requireRole(roles: Role[]) {
   return session;
 }
 
+/** Any signed-in user (no role restriction). */
+export async function requireAuth() {
+  const session = await getSession();
+  if (!session?.user) throw errors.unauthorized();
+  return session;
+}
+
 /** Where each role lands after login. */
 export const HOME_FOR_ROLE: Record<Role, string> = {
   CITIZEN: "/citizen",

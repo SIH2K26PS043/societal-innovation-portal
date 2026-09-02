@@ -23,6 +23,10 @@ export const ProposalStatus = z.enum(["DRAFT","SUBMITTED","APPROVED","REJECTED"]
 export const ProjectStatus = z.enum(["PLANNING","IN_EXECUTION","PILOT","DEPLOYED","CLOSED"]);
 export const OutcomeType = z.enum(["PATENT","STARTUP","IP_TRANSFER","PUBLICATION","DEPLOYMENT"]);
 export const PartnerOffering = z.enum(["FUNDING","MENTORING","PROTOTYPING","PILOT","TECH_TRANSFER"]);
+export const NotificationType = z.enum([
+  "PROBLEM_SUBMITTED","PROBLEM_ROUTED","TEAM_FORMED","PROPOSAL_SUBMITTED",
+  "PROPOSAL_REVIEWED","PARTNER_JOINED","MILESTONE_UPDATED","OUTCOME_RECORDED","GENERIC",
+]);
 
 export type Role = z.infer<typeof Role>;
 export type Category = z.infer<typeof Category>;
@@ -141,6 +145,17 @@ export type NepImpact = {
 };
 export type CategoryCount = { category: Category; count: number };
 export type DistrictCount = { district: string; count: number; resolved: number };
+
+// ── NOTIFICATIONS (N1) ───────────────────────────────────────────────────────
+export type NotificationType = z.infer<typeof NotificationType>;
+export type NotificationDTO = {
+  id: string;
+  type: NotificationType;
+  message: string;
+  link: string | null;
+  read: boolean;
+  createdAt: string;
+};
 
 // ── AI SERVICE SHAPES (mirror apps/ai Pydantic + docs/04-AI-SERVICE.md) ───────
 export const AiCategorizeReq = z.object({ title: z.string(), description: z.string() });
