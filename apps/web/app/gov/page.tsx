@@ -1,15 +1,23 @@
 "use client";
+import dynamic from "next/dynamic";
 import { useQuery } from "@tanstack/react-query";
 import { AppShell } from "@/components/app-shell";
 import { Card, CardContent, CardHeader, CardTitle, CategoryBadge, categoryColor } from "@repo/ui";
 import type { AnalyticsSummary, NepImpact, CategoryCount } from "@repo/types";
+import type { MapPoint } from "@/components/problems-map";
 import { FileText, CheckCircle2, Building2, Rocket, Award, GraduationCap, FlaskConical, Users } from "lucide-react";
+
+const ProblemsMap = dynamic(() => import("@/components/problems-map"), {
+  ssr: false,
+  loading: () => <div className="h-[320px] w-full animate-pulse rounded-xl bg-muted" />,
+});
 
 type Overview = {
   summary: AnalyticsSummary;
   nep: NepImpact;
   categories: CategoryCount[];
   topClusters: { id: string; title: string; category: string; size: number }[];
+  points: MapPoint[];
 };
 
 async function fetchOverview(): Promise<Overview> {
@@ -62,6 +70,13 @@ export default function GovDashboard() {
               </div>
             </CardContent>
           </Card>
+
+          {q.data.points.length > 0 && (
+            <Card>
+              <CardHeader><CardTitle className="text-base">Where problems are reported</CardTitle></CardHeader>
+              <CardContent><ProblemsMap points={q.data.points} /></CardContent>
+            </Card>
+          )}
 
           <div className="grid gap-6 lg:grid-cols-2">
             {/* Category distribution */}

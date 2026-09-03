@@ -1,10 +1,16 @@
 "use client";
 import { useState } from "react";
+import dynamic from "next/dynamic";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { AppShell } from "@/components/app-shell";
 import { Button, Card, CardContent, CardHeader, CardTitle, CategoryBadge, StatusBadge, ClusterBadge } from "@repo/ui";
 import { Category, Severity, CreateProblemInput, type ProblemStatus, type AiProcessRes } from "@repo/types";
-import { MapPin, Sparkles, CheckCircle2, Users } from "lucide-react";
+import { Sparkles, CheckCircle2, Users, ImagePlus, X, LocateFixed } from "lucide-react";
+
+const LocationPicker = dynamic(() => import("@/components/location-picker"), {
+  ssr: false,
+  loading: () => <div className="h-[220px] w-full animate-pulse rounded-xl bg-muted" />,
+});
 
 const CATEGORIES = Category.options;
 const SEVERITIES = Severity.options;
@@ -33,7 +39,35 @@ export default function CitizenHome() {
   const [form, setForm] = useState(EMPTY);
   const [err, setErr] = useState<string | null>(null);
   const [result, setResult] = useState<{ ai: AiProcessRes | null } | null>(null);
+  const [media, setMedia] = useState<{ type: "IMAGE" | "VIDEO" | "DOC"; url: string }[]>([]);
+  const [loc, setLoc] = useState<{ lat: number; lng: number } | null>(null);
+  const [uploading, setUploading] = useState(false);
   const set = (k: keyof typeof EMPTY, v: string) => setForm((f) => ({ ...f, [k]: v }));
+
+  async function onFiles(files: FileList | null) {
+    if (!files?.length) return;
+    setUploading(true);
+    setErr(null);
+    try {
+      for (const file of Array.from(files)) {
+        const fd = new FormData();
+        fd.append("file", file);
+        const j = await (await fetch("/api/upload", { method: "POST", body: fd })).json();
+        if (j.data) setMedia((m) => [...m, j.data]);
+        else setErr(j.error?.message ?? "Upload failed");
+      }
+    } finally {
+      setUploading(false);
+    }
+  }
+
+  function useMyLocation() {
+    if (!navigator.geolocation) return setErr("Geolocation not available");
+    navigator.geolocation.getCurrentPosition(
+      (pos) => setLoc({ lat: pos.coords.latitude, lng: pos.coords.longitude }),
+      () => setErr("Couldn't get your location — tap the map to drop a pin"),
+    );
+  }
 
   const submit = useMutation({
     mutationFn: async () => {
@@ -44,6 +78,9 @@ export default function CitizenHome() {
         severity: form.severity,
         district: form.district || undefined,
         address: form.address || undefined,
+        latitude: loc?.lat,
+        longitude: loc?.lng,
+        mediaUrls: media,
       });
       if (!parsed.success) throw new Error(parsed.error.issues[0]?.message ?? "Invalid input");
       const r = await fetch("/api/problems", {
@@ -59,6 +96,8 @@ export default function CitizenHome() {
       setResult(data);
       setErr(null);
       setForm(EMPTY);
+      setMedia([]);
+      setLoc(null);
       qc.invalidateQueries({ queryKey: ["problems", "mine"] });
     },
     onError: (e: Error) => setErr(e.message),
@@ -109,9 +148,43 @@ export default function CitizenHome() {
               <Field label="Address / landmark"><input className={inputCls} value={form.address}
                 onChange={(e) => set("address", e.target.value)} placeholder="Near ..." /></Field>
             </div>
-            <p className="flex items-center gap-1.5 text-xs text-muted-foreground">
-              <MapPin className="h-3.5 w-3.5" /> Photo + GPS pin coming from the mobile capture step.
-            </p>
+            {/* Photo evidence */}
+            <div>
+              <span className="mb-1.5 block text-sm font-semibold">Photo evidence</span>
+              <div className="flex flex-wrap items-center gap-2">
+                {media.map((m, i) => (
+                  <div key={m.url} className="relative h-16 w-16 overflow-hidden rounded-lg border">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={m.url} alt="evidence" className="h-full w-full object-cover" />
+                    <button type="button" onClick={() => setMedia((x) => x.filter((_, j) => j !== i))}
+                      className="absolute right-0.5 top-0.5 rounded bg-black/60 p-0.5 text-white">
+                      <X className="h-3 w-3" />
+                    </button>
+                  </div>
+                ))}
+                <label className="flex h-16 w-16 cursor-pointer flex-col items-center justify-center gap-1 rounded-lg border border-dashed text-muted-foreground hover:text-foreground">
+                  <ImagePlus className="h-5 w-5" />
+                  <input type="file" accept="image/jpeg,image/png,image/webp" multiple className="hidden"
+                    onChange={(e) => onFiles(e.target.files)} />
+                </label>
+                {uploading && <span className="text-xs text-muted-foreground">Uploading…</span>}
+              </div>
+            </div>
+
+            {/* Location */}
+            <div>
+              <div className="mb-1.5 flex items-center justify-between">
+                <span className="text-sm font-semibold">Location</span>
+                <button type="button" onClick={useMyLocation}
+                  className="inline-flex items-center gap-1 text-xs font-medium text-primary">
+                  <LocateFixed className="h-3.5 w-3.5" /> Use my location
+                </button>
+              </div>
+              <LocationPicker value={loc} onChange={setLoc} />
+              <p className="mt-1 text-xs text-muted-foreground">
+                {loc ? `Pinned at ${loc.lat.toFixed(4)}, ${loc.lng.toFixed(4)}` : "Tap the map to drop a pin."}
+              </p>
+            </div>
             {err && <p className="text-sm text-destructive">{err}</p>}
             <Button type="submit" size="lg" disabled={submit.isPending}>
               {submit.isPending ? "Submitting…" : "Submit report"}

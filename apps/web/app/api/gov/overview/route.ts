@@ -13,7 +13,7 @@ export async function GET() {
     const [
       totalProblems, resolved, engaged, activeProjects,
       outcomes, projectsDone, projectsTotal, teamMembers,
-      byCategory, topClusters,
+      byCategory, topClusters, geo,
     ] = await Promise.all([
       prisma.problem.count(),
       prisma.problem.count({ where: { status: "RESOLVED" } }),
@@ -25,7 +25,17 @@ export async function GET() {
       prisma.teamMember.count(),
       prisma.problem.groupBy({ by: ["category"], _count: { _all: true } }),
       prisma.cluster.findMany({ orderBy: { size: "desc" }, take: 8, select: { id: true, title: true, category: true, size: true } }),
+      prisma.problem.findMany({
+        where: { latitude: { not: null }, longitude: { not: null } },
+        orderBy: { priorityScore: "desc" }, take: 200,
+        select: { id: true, title: true, category: true, priorityScore: true, latitude: true, longitude: true },
+      }),
     ]);
+
+    const points = geo.map((p) => ({
+      id: p.id, title: p.title, category: p.category as string,
+      priorityScore: p.priorityScore, lat: p.latitude as number, lng: p.longitude as number,
+    }));
 
     const outCount = (t: string) => outcomes.find((o) => o.type === t)?._count._all ?? 0;
 
@@ -46,6 +56,6 @@ export async function GET() {
       .map((c) => ({ category: c.category as Category, count: c._count._all }))
       .sort((a, b) => b.count - a.count);
 
-    return Response.json(ok({ summary, nep, categories, topClusters }));
+    return Response.json(ok({ summary, nep, categories, topClusters, points }));
   });
 }

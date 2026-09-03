@@ -32,9 +32,7 @@ export default function IndustryHome() {
       </p>
 
       {q.data && !q.data.hasProfile && (
-        <p className="mt-4 rounded-lg border border-accent/40 bg-accent/10 p-3 text-sm">
-          Complete your industry profile to start partnering.
-        </p>
+        <RegisterForm onDone={() => qc.invalidateQueries({ queryKey: ["industry", "projects"] })} />
       )}
 
       <div className="mt-6 grid gap-4 md:grid-cols-2">
@@ -48,6 +46,55 @@ export default function IndustryHome() {
         {q.data?.items.map((p) => <ProjectCard key={p.id} p={p} onDone={() => qc.invalidateQueries({ queryKey: ["industry", "projects"] })} />)}
       </div>
     </AppShell>
+  );
+}
+
+function RegisterForm({ onDone }: { onDone: () => void }) {
+  const [companyName, setCompanyName] = useState("");
+  const [sector, setSector] = useState("");
+  const [description, setDescription] = useState("");
+  const [offerings, setOfferings] = useState<string[]>(["FUNDING"]);
+  const [err, setErr] = useState<string | null>(null);
+  const toggle = (o: string) => setOfferings((v) => (v.includes(o) ? v.filter((x) => x !== o) : [...v, o]));
+  const submit = useMutation({
+    mutationFn: async () => {
+      const r = await fetch("/api/industry/register", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ companyName, sector, offerings, description: description || undefined }),
+      });
+      const j = await r.json();
+      if (j.error) throw new Error(j.error.message);
+      return j.data;
+    },
+    onSuccess: () => { setErr(null); onDone(); },
+    onError: (e: Error) => setErr(e.message),
+  });
+  const inp = "h-10 w-full rounded-lg border border-input bg-background px-3 text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring";
+  return (
+    <Card className="mt-4 border-accent/30 bg-accent/5">
+      <CardContent className="p-5">
+        <h2 className="font-bold">Set up your industry profile</h2>
+        <p className="mt-0.5 text-sm text-muted-foreground">So the AI can match you to relevant projects and you can partner.</p>
+        <div className="mt-4 grid gap-3 sm:grid-cols-2">
+          <input className={inp} placeholder="Company name" value={companyName} onChange={(e) => setCompanyName(e.target.value)} />
+          <input className={inp} placeholder="Sector (e.g. water technology)" value={sector} onChange={(e) => setSector(e.target.value)} />
+        </div>
+        <input className={`${inp} mt-3`} placeholder="Short description (optional)" value={description} onChange={(e) => setDescription(e.target.value)} />
+        <div className="mt-3 flex flex-wrap gap-2">
+          {OFFERINGS.map((o) => (
+            <button key={o} type="button" onClick={() => toggle(o)}
+              className={`rounded-full border px-3 py-1 text-xs font-medium ${offerings.includes(o) ? "border-primary bg-primary text-primary-foreground" : "text-muted-foreground"}`}>
+              {o.replace(/_/g, " ")}
+            </button>
+          ))}
+        </div>
+        {err && <p className="mt-2 text-sm text-destructive">{err}</p>}
+        <Button className="mt-4" disabled={submit.isPending || companyName.length < 2 || sector.length < 2 || offerings.length === 0} onClick={() => submit.mutate()}>
+          {submit.isPending ? "Saving…" : "Save profile"}
+        </Button>
+      </CardContent>
+    </Card>
   );
 }
 

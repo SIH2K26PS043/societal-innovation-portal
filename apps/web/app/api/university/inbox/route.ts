@@ -23,6 +23,7 @@ export async function GET() {
             id: true, title: true, description: true, category: true, priorityScore: true, status: true, district: true,
             cluster: { select: { size: true } },
             project: { select: { id: true, status: true } },
+            proposal: { select: { status: true } },
           },
         },
       },
