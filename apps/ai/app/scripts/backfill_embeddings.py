@@ -19,11 +19,19 @@ async def main():
         # 1) faculty expertise embeddings
         faculty = await c.fetch('SELECT id, "researchAreas" FROM "FacultyProfile" WHERE "expertiseEmbedding" IS NULL')
         for r in faculty:
-            areas = r["researchAreas"] or []
-            if areas:
-                await db.store_faculty_embedding(r["id"], embed_one(", ".join(areas)))
+            txt = matching.faculty_expertise_text(r["researchAreas"])
+            if txt:
+                await db.store_faculty_embedding(r["id"], embed_one(txt))
 
-        # 2) run the full pipeline on every problem (embed + cluster + match)
+        # 2) industry partner expertise embeddings
+        industry = await c.fetch(
+            'SELECT id, "companyName", sector, description FROM "IndustryProfile" WHERE "expertiseEmbedding" IS NULL')
+        for r in industry:
+            txt = matching.industry_expertise_text(r["companyName"], r["sector"], r["description"])
+            if txt:
+                await db.store_industry_embedding(r["id"], embed_one(txt))
+
+        # 3) run the full pipeline on every problem (embed + cluster + match)
         problems = await c.fetch('SELECT id, title, description, category::text AS category FROM "Problem"')
 
     processed = 0
@@ -31,7 +39,7 @@ async def main():
         await matching.process(r["id"], r["title"], r["description"], r["category"])
         processed += 1
 
-    print(f"Backfilled {len(faculty)} faculty embeddings and processed {processed} problems.")
+    print(f"Backfilled {len(faculty)} faculty + {len(industry)} industry embeddings; processed {processed} problems.")
     print("Check: the 8 Ranchi water reports should now share one cluster.")
 
 

@@ -1,13 +1,32 @@
 """FastAPI entrypoint. Contract: docs/04-AI-SERVICE.md. Every response uses the
 standard {"data": ..., "error": ...} envelope so apps/web can rely on one shape."""
+import logging
+from contextlib import asynccontextmanager
+
 from fastapi import Depends, FastAPI, Header, HTTPException
 
 from . import categorize as cat
 from . import embeddings, matching
+from . import validate as vld
 from .config import AI_SERVICE_KEY
-from .schemas import (CategorizeReq, EmbedReq, MatchReq, ProcessReq, ValidateReq, fail, ok)
+from .schemas import (CategorizeReq, EmbedReq, MatchReq, PriorityReq, ProcessReq, ValidateReq, fail, ok)
 
-app = FastAPI(title="SIH26043 AI Service", version="0.1.0")
+log = logging.getLogger("ai")
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # X4 demo safety: warm the embedding model once at startup so /health is
+    # truthful and the first real request isn't slow. Never block startup on it.
+    try:
+        embeddings.get_model()
+        log.info("embedding model warmed")
+    except Exception as e:  # noqa: BLE001
+        log.warning("model warmup failed (will lazy-load): %s", e)
+    yield
+
+
+app = FastAPI(title="SIH26043 AI Service", version="0.1.0", lifespan=lifespan)
 
 
 def require_key(x_ai_key: str = Header(default="", alias="x-ai-key")):
@@ -54,10 +73,24 @@ async def match_university(req: MatchReq):
         return fail("SERVER", str(e))
 
 
+@app.post("/match/industry", dependencies=[Depends(require_key)])
+async def match_industry(req: MatchReq):
+    try:
+        return ok(await matching.match_industry(req.problemId, req.text))
+    except Exception as e:  # noqa: BLE001
+        return fail("SERVER", str(e))
+
+
+@app.post("/priority", dependencies=[Depends(require_key)])
+async def priority(req: PriorityReq):
+    try:
+        score = matching.priority_score(req.clusterSize, req.category, len(req.severityKeywords))
+        return ok({"score": score})
+    except Exception as e:  # noqa: BLE001
+        return fail("SERVER", str(e))
+
+
 @app.post("/validate", dependencies=[Depends(require_key)])
 async def validate(req: ValidateReq):
-    # A5 — starter heuristic; M3 improves. Always returns a result (offline-safe).
-    text = f"{req.title} {req.description}".strip()
-    is_spam = len(text) < 12 or text.lower().count("http") > 2
-    quality = 0.2 if is_spam else min(1.0, 0.4 + len(text) / 400)
-    return ok({"isValid": not is_spam, "isSpam": is_spam, "quality": round(quality, 2), "reason": ""})
+    # A5 — offline spam/quality check; always returns a result.
+    return ok(vld.validate(req.title, req.description))

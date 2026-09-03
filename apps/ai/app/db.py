@@ -13,6 +13,12 @@ from pgvector.asyncpg import register_vector
 
 from .config import DATABASE_URL
 
+
+def _now():
+    # Prisma DateTime columns are `timestamp` WITHOUT time zone; asyncpg needs a
+    # naive datetime (a tz-aware one raises "can't subtract offset-naive/aware").
+    return datetime.now(timezone.utc).replace(tzinfo=None)
+
 _pool: Optional[asyncpg.Pool] = None
 
 
@@ -55,6 +61,12 @@ async def store_faculty_embedding(faculty_id: str, vec: list[float]):
         await c.execute('UPDATE "FacultyProfile" SET "expertiseEmbedding" = $1 WHERE id = $2', _vec(vec), faculty_id)
 
 
+async def store_industry_embedding(industry_id: str, vec: list[float]):
+    pool = await get_pool()
+    async with pool.acquire() as c:
+        await c.execute('UPDATE "IndustryProfile" SET "expertiseEmbedding" = $1 WHERE id = $2', _vec(vec), industry_id)
+
+
 # ── dedup / clustering ────────────────────────────────────────────────────────
 async def similar_problems(vec: list[float], exclude_id: str, limit: int = 10):
     pool = await get_pool()
@@ -71,20 +83,45 @@ async def similar_problems(vec: list[float], exclude_id: str, limit: int = 10):
         return [dict(r) for r in rows]
 
 
-async def assign_cluster(problem_id: str, cluster_id: str):
+async def get_problem_cluster(problem_id: str) -> Optional[str]:
+    pool = await get_pool()
+    async with pool.acquire() as c:
+        return await c.fetchval('SELECT "clusterId" FROM "Problem" WHERE id = $1', problem_id)
+
+
+async def attach_to_cluster(problem_id: str, cluster_id: str):
     pool = await get_pool()
     async with pool.acquire() as c:
         await c.execute('UPDATE "Problem" SET "clusterId" = $1 WHERE id = $2', cluster_id, problem_id)
+
+
+async def recompute_cluster(cluster_id: str) -> int:
+    """Refresh a cluster's size, centroid (mean of member embeddings) and
+    canonicalProblemId (earliest report). An emptied cluster is deleted."""
+    pool = await get_pool()
+    async with pool.acquire() as c:
         size = await c.fetchval('SELECT COUNT(*) FROM "Problem" WHERE "clusterId" = $1', cluster_id)
-        await c.execute('UPDATE "Cluster" SET size = $1, "updatedAt" = $2 WHERE id = $3',
-                        size, datetime.now(timezone.utc), cluster_id)
+        if not size:
+            await c.execute('DELETE FROM "Cluster" WHERE id = $1', cluster_id)
+            return 0
+        await c.execute(
+            '''UPDATE "Cluster" SET
+                 size = $1,
+                 centroid = (SELECT AVG(embedding) FROM "Problem"
+                             WHERE "clusterId" = $2 AND embedding IS NOT NULL),
+                 "canonicalProblemId" = (SELECT id FROM "Problem"
+                             WHERE "clusterId" = $2 ORDER BY "createdAt" ASC LIMIT 1),
+                 "updatedAt" = $3
+               WHERE id = $2''',
+            size, cluster_id, _now(),
+        )
         return size
 
 
 async def create_cluster(title: str, category: str, centroid: list[float]) -> str:
     pool = await get_pool()
     cid = gen_id()
-    now = datetime.now(timezone.utc)
+    now = _now()
     async with pool.acquire() as c:
         await c.execute(
             '''INSERT INTO "Cluster" (id, title, category, size, centroid, "createdAt", "updatedAt")
@@ -114,6 +151,21 @@ async def match_faculty(vec: list[float], limit: int = 5):
                FROM "FacultyProfile" f
                WHERE f."expertiseEmbedding" IS NOT NULL
                ORDER BY f."expertiseEmbedding" <=> $1
+               LIMIT $2''',
+            _vec(vec), limit,
+        )
+        return [dict(r) for r in rows]
+
+
+async def match_industry(vec: list[float], limit: int = 3):
+    pool = await get_pool()
+    async with pool.acquire() as c:
+        rows = await c.fetch(
+            '''SELECT p.id AS partner_id, p."companyName" AS company, p.sector AS sector,
+                      1 - (p."expertiseEmbedding" <=> $1) AS score
+               FROM "IndustryProfile" p
+               WHERE p."expertiseEmbedding" IS NOT NULL
+               ORDER BY p."expertiseEmbedding" <=> $1
                LIMIT $2''',
             _vec(vec), limit,
         )
