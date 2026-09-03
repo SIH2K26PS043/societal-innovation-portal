@@ -1,0 +1,67 @@
+name: Provision Supabase (schema + seed + embeddings)
+
+# Manual trigger. Runs on GitHub's runners, which CAN reach Supabase's Postgres port
+# (a firewalled dev network cannot). Re-runnable — the seed wipes and reloads demo
+# data, then embeds + clusters it so dedup/matching are ready.
+#
+# Required repo secret:
+#   SUPABASE_DB_URL  — the Supabase *Session pooler* URL (host ...pooler.supabase.com,
+#                      port 5432, IPv4). Include ?sslmode=require. Do NOT use the
+#                      transaction pooler (6543) here — asyncpg needs session mode.
+on:
+  workflow_dispatch:
+
+jobs:
+  provision:
+    name: Push schema, seed, backfill embeddings
+    runs-on: ubuntu-latest
+    env:
+      DATABASE_URL: ${{ secrets.SUPABASE_DB_URL }}
+      DIRECT_URL: ${{ secrets.SUPABASE_DB_URL }}
+      PGSSLMODE: require
+    steps:
+      - uses: actions/checkout@v4
+
+      # pnpm version comes from package.json "packageManager"; do not set `version:`.
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      # The db:* scripts read a repo-root .env via dotenv-cli; synthesize it.
+      - name: Write .env from secret
+        run: printf 'DATABASE_URL=%s\nDIRECT_URL=%s\n' "$DATABASE_URL" "$DIRECT_URL" > .env
+
+      - name: Push Prisma schema
+        run: pnpm db:push
+
+      - name: Add pgvector columns
+        # Columns only — no ivfflat indexes: on a small demo dataset ivfflat's
+        # approximate search returns wrong neighbours. Add tuned indexes once the
+        # table has thousands of rows.
+        run: |
+          sudo apt-get update && sudo apt-get install -y --no-install-recommends postgresql-client
+          psql "$DATABASE_URL" -v ON_ERROR_STOP=1 \
+            -c "CREATE EXTENSION IF NOT EXISTS vector;" \
+            -c 'ALTER TABLE "Problem"         ADD COLUMN IF NOT EXISTS embedding vector(384);' \
+            -c 'ALTER TABLE "FacultyProfile"  ADD COLUMN IF NOT EXISTS "expertiseEmbedding" vector(384);' \
+            -c 'ALTER TABLE "Cluster"         ADD COLUMN IF NOT EXISTS centroid vector(384);' \
+            -c 'ALTER TABLE "IndustryProfile" ADD COLUMN IF NOT EXISTS "expertiseEmbedding" vector(384);'
+
+      - name: Seed demo data
+        run: pnpm db:seed
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Backfill embeddings (embed + cluster + route seed data)
+        working-directory: apps/ai
+        run: |
+          pip install -r requirements.txt
+          python -m app.scripts.backfill_embeddings
