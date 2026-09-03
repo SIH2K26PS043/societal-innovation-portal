@@ -19,6 +19,7 @@ export async function GET() {
         id: true, title: true, status: true,
         problem: { select: { category: true } },
         outcomes: { select: { type: true, title: true }, orderBy: { date: "desc" } },
+        milestones: { select: { id: true, title: true, status: true }, orderBy: { order: "asc" } },
       },
     });
     return Response.json(ok({ items }));

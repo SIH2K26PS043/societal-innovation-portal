@@ -61,7 +61,11 @@ export default function UniversityHome() {
   );
 }
 
-type Project = { id: string; title: string; status: string; problem: { category: string }; outcomes: { type: string; title: string }[] };
+type Project = {
+  id: string; title: string; status: string; problem: { category: string };
+  outcomes: { type: string; title: string }[];
+  milestones: { id: string; title: string; status: string }[];
+};
 
 function ProjectsSection() {
   const qc = useQueryClient();
@@ -88,6 +92,15 @@ function ProjectCard({ p, onDone }: { p: Project; onDone: () => void }) {
     mutationFn: () => j("/api/projects/complete", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ projectId: p.id }) }),
     onSuccess: onDone,
   });
+  const [msTitle, setMsTitle] = useState("");
+  const addMs = useMutation({
+    mutationFn: () => j("/api/milestones", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ projectId: p.id, title: msTitle }) }),
+    onSuccess: () => { setMsTitle(""); onDone(); },
+  });
+  const toggleMs = useMutation({
+    mutationFn: (id: string) => j("/api/milestones/toggle", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ milestoneId: id }) }),
+    onSuccess: onDone,
+  });
   const deployed = p.status === "DEPLOYED" || p.status === "CLOSED";
   return (
     <Card>
@@ -97,6 +110,24 @@ function ProjectCard({ p, onDone }: { p: Project; onDone: () => void }) {
           <Badge variant={deployed ? "success" : "warning"}>{p.status.replace(/_/g, " ")}</Badge>
         </div>
         <div className="mt-1"><CategoryBadge category={p.problem.category} /></div>
+
+        {/* Milestones */}
+        <div className="mt-3">
+          {p.milestones.map((m) => (
+            <button key={m.id} type="button" onClick={() => toggleMs.mutate(m.id)}
+              className="flex w-full items-center gap-2 py-0.5 text-left text-sm">
+              <span className={`h-3.5 w-3.5 shrink-0 rounded-full border-2 ${m.status === "DONE" ? "border-secondary bg-secondary" : m.status === "IN_PROGRESS" ? "border-accent bg-accent/50" : "border-muted-foreground/40"}`} />
+              <span className={m.status === "DONE" ? "text-muted-foreground line-through" : ""}>{m.title}</span>
+            </button>
+          ))}
+          {!deployed && (
+            <div className="mt-1.5 flex gap-2">
+              <input className="h-8 flex-1 rounded-lg border border-input bg-background px-2 text-xs" placeholder="Add a milestone…" value={msTitle} onChange={(e) => setMsTitle(e.target.value)} />
+              <Button size="sm" variant="outline" disabled={addMs.isPending || msTitle.length < 2} onClick={() => addMs.mutate()}>Add</Button>
+            </div>
+          )}
+        </div>
+
         {p.outcomes.length > 0 && (
           <ul className="mt-3 flex flex-col gap-1">
             {p.outcomes.map((o, i) => (
