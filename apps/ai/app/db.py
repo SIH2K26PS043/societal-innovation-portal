@@ -3,6 +3,7 @@ Assignment writes; everything else is owned by apps/web via Prisma.
 
 NOTE: Prisma generates ids/updatedAt in its app layer, so raw INSERTs here must
 supply `id` (and `updatedAt` where the model has @updatedAt). gen_id() mimics cuid."""
+import ssl
 import uuid
 from datetime import datetime, timezone
 from typing import Optional
@@ -27,8 +28,21 @@ def gen_id(prefix: str = "c") -> str:
 
 
 def _clean_url(url: str) -> str:
-    # asyncpg does not accept ?schema=... style query params
+    # asyncpg takes ssl/schema as call args, not ?sslmode=/?schema= query params.
     return url.split("?")[0]
+
+
+def _ssl_ctx(url: str):
+    # Local Postgres: no TLS. Anything remote (Supabase) requires TLS — asyncpg
+    # wants an SSLContext, not a `sslmode=` string. Encrypt without strict cert
+    # verification (equivalent to sslmode=require), which is what Supabase needs.
+    u = url.lower()
+    if "localhost" in u or "127.0.0.1" in u:
+        return None
+    ctx = ssl.create_default_context()
+    ctx.check_hostname = False
+    ctx.verify_mode = ssl.CERT_NONE
+    return ctx
 
 
 async def _init_conn(conn: asyncpg.Connection):
@@ -39,7 +53,8 @@ async def get_pool() -> asyncpg.Pool:
     global _pool
     if _pool is None:
         _pool = await asyncpg.create_pool(
-            _clean_url(DATABASE_URL), min_size=1, max_size=5, init=_init_conn
+            _clean_url(DATABASE_URL), ssl=_ssl_ctx(DATABASE_URL),
+            min_size=1, max_size=5, init=_init_conn,
         )
     return _pool
 
