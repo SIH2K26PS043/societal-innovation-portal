@@ -1,0 +1,28 @@
+# Render Blueprint — AI microservice (apps/ai).
+# The web app deploys to Vercel; the database is Supabase. After the first blueprint
+# sync, fill the secret env vars (sync:false) in the Render dashboard.
+services:
+  - type: web
+    name: sih-ai-service
+    runtime: docker
+    dockerfilePath: apps/ai/Dockerfile
+    dockerContext: apps/ai
+    plan: starter          # 512 MB; bump to `standard` if torch OOMs while loading the model
+    region: singapore      # closest Render region to ap-south-1 Supabase
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      - key: DATABASE_URL          # Supabase DIRECT connection (port 5432) — asyncpg
+        sync: false
+      - key: AI_SERVICE_KEY        # shared secret; MUST match the web app's value
+        sync: false
+      - key: LLM_PROVIDER
+        value: groq
+      - key: GROQ_API_KEY          # optional; the keyword fallback works without it
+        sync: false
+      - key: EMBEDDING_MODEL
+        value: sentence-transformers/all-MiniLM-L6-v2
+      - key: DEDUP_THRESHOLD
+        value: "0.82"
+      - key: SEED_MODE
+        value: "false"
